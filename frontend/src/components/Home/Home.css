@@ -1,0 +1,92 @@
+  /* Home container styles */
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    padding: 0 20px;
+    gap: 70px;
+  }
+  
+  .title {
+    font-size: 3rem;
+    color: white; 
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .algorithm-btn {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .algorithm-btn button {
+    width: 25vw;
+    background-color: white; 
+    font-weight: bolder;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 14px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .algorithm-btn button:hover {
+    background-color: black; 
+    color: white;
+    transform: scale(1.1);
+  }
+  
+  .algorithm-btn button:active {
+    background-color: #1e598c;
+    transform: scale(1);
+  }
+
+  .github-btn {
+    position: absolute; /* Position relative to the container */
+    top: 20px;
+    right: 20px;
+    font-weight: 600;
+    background-color: white; /* GitHub's black */
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .github-btn:hover {
+    background-color: black;
+    color: white;
+    transform: scale(1.1); 
+  }
+  
+  .github-btn:active {
+    transform: scale(1); 
+    background-color: #111111; 
+  }
+
+  @media (max-width: 600px) {
+    .title {
+      font-size: 2rem;
+    }
+  
+    .algorithm-btn button {
+      padding: 10px 15px; 
+      font-size: 0.9rem;
+    }
+  }
+  

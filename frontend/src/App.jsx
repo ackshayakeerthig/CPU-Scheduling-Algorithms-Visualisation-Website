@@ -1,13 +1,12 @@
 import "./App.css";
+import Home from "./components/Home/Home";
 import ParticleBackground from "./components/ParticleBackground/ParticleBackground";
 
 function App() {
   return (
     <>
-      <div>
-        <ParticleBackground />
-        <h1>CPU Scheduling Visualizer</h1>
-      </div>
+      <ParticleBackground />
+      <Home />
     </>
   );
 }
