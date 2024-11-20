@@ -1,0 +1,52 @@
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Full screen height for the body */
+  body {
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #000; /* Optional: gives a dark background for better particle visibility */
+  }
+  
+  /* Container for particles */
+  div {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden; /* Ensures particles are contained within the viewport */
+  }
+  
+  /* Particle background container */
+  #tsparticles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Makes sure particles are behind other content */
+  }
+  
+  /* Style for your title text */
+  h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: white;
+    z-index: 1; /* Makes sure the title is above particles */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Optional: Add responsive design to make sure the text is not too large on smaller screens */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+    }
+  }
+  
