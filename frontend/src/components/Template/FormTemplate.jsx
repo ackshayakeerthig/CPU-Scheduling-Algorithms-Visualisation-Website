@@ -57,7 +57,7 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
 
   return (
     <div className="template-form-container">
-      <h2 className="template-title">{algorithm} Input Form</h2>
+      <h2 className="template-title">{algorithm}</h2>
 
       <form className="template-form" onSubmit={handleSubmit}>
         {processes.map((process, index) => (
