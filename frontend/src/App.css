@@ -4,6 +4,34 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
+
+  .home-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-weight: 600;
+    background-color: white; 
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+  }
+
+  .home-btn:hover {
+    background-color: black;
+    color: white;
+    transform: scale(1.1); 
+  }
+  
+  .home-btn:active {
+    transform: scale(1); 
+    background-color: #111111; 
+  }
   
   #tsparticles {
     position: absolute;
