@@ -1,16 +1,14 @@
-import React from "react";
 import "./RR.css";
 import { useLocation } from "react-router-dom";
-import FormTemplate from "../../components/Template/FormTemplate";
+import OutputCard from "../../components/OutputCard/OutputCard";
 
-const RR = () => {
+function RR(){
   const location = useLocation();
   const algorithm = location.pathname.substring(1);
 
   return (
-    <>
-      <FormTemplate algorithm={algorithm} />
-    </>
+    <OutputCard algorithm={algorithm}/>
+
   );
 };
 
