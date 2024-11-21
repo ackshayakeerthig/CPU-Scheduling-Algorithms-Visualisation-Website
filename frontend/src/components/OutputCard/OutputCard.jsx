@@ -37,9 +37,9 @@ function OutputTable({ output }) {
 
   return (
     <>
-      <h1 style={{ textAlign: "center", color: "#000000" }}>
-        Live Output Table
-      </h1>
+      <div style={{ display:"flex", justifyContent:"center", width:"100%"}}>
+        <h1 style={{ color: "#000000" }}>Live Output Table</h1>
+      </div>
       <table className="output-table">
         <TableHead headings={tableHeadings} />
         <TableBody processes={output} />

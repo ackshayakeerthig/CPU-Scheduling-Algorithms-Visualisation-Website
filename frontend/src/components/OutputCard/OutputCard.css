@@ -29,6 +29,7 @@
 .input-section {
   border-right: 1px solid #ddd; /* Border to separate the sections */
   padding-right: 20px;
+  width: 40%;
 }
 
 /* Output section style */
@@ -37,6 +38,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  width: 60%;
 }
 
 /* Title of output section */
@@ -49,7 +51,6 @@ h1 {
 
 /* Table Styling */
 .output-table {
-  width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
@@ -58,7 +59,6 @@ h1 {
 .output-table td {
   text-align: center;
   border: 1px solid #ddd;
-  width: 20%;
 }
 
 .output-table th {
