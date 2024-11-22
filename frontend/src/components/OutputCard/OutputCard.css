@@ -59,9 +59,11 @@ h1 {
 .output-table td {
   text-align: center;
   border: 1px solid #ddd;
+  padding: 10px 0px;
 }
 
 .output-table th {
+  padding: 10px;
   background-color: #f4f4f4;
   font-weight: bold;
 }
@@ -91,6 +93,15 @@ h1 {
 
   .output-table th,
   .output-table td {
-    padding: 10px;
+    padding: 7px;
+    font-size: 0.7rem;
+  }
+
+  .output-table th{
+    padding: 9px;
+  }
+
+  .output-table-title{
+    font-size: 1.2rem;
   }
 }

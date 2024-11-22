@@ -50,7 +50,11 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
 
     console.log(dataToSubmit);
 
-    const result = calculateAlgorithm(dataToSubmit.processes);
+    const result =
+      algorithm === "RoundRobin"
+        ? calculateAlgorithm(dataToSubmit.processes, dataToSubmit.quantum)
+        : calculateAlgorithm(dataToSubmit.processes);
+
     console.log(result);
     setOutput(result);
   };
