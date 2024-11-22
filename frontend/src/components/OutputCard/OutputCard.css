@@ -105,3 +105,19 @@ h1 {
     font-size: 1.2rem;
   }
 }
+
+@media (max-width: 368px) {
+
+  .input-section,
+  .output-section {
+    width: 100%;
+    border-right: none; /* Remove border on mobile */
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .output-table {
+    padding: 5px;
+    font-size: 0.5rem;
+  }
+}

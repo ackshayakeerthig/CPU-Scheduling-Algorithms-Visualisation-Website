@@ -59,6 +59,12 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
     setOutput(result);
   };
 
+  // Clear form inputs
+  const handleClearForm = () => {
+    setProcesses([{ id: "", arrival: "", burst: "", priority: "" }]);
+    setQuantum("");
+  };
+
   return (
     <div className="template-form-container">
       <h2 className="template-title">
@@ -150,7 +156,14 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
         )}
         <div className="template-submit-div-btn">
           <button type="submit" className="template-submit-btn">
-            Submit
+            Run
+          </button>
+          <button
+            type="button"
+            className="template-clear-btn"
+            onClick={handleClearForm}
+          >
+            Clear
           </button>
         </div>
       </form>

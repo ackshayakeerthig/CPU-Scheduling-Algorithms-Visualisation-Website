@@ -68,6 +68,7 @@
   .template-submit-div-btn {
     display: flex;
     justify-content: center;
+    gap: 10px;
   }
 
   .template-submit-btn {
@@ -75,11 +76,21 @@
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 10px 15px;
+    padding: 10px 5px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    min-width: 100px;
+    min-width: 80px;
+  }
+
+  .template-clear-btn{
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    min-width: 80px;
   }
   
   .template-add-btn:active,
@@ -87,7 +98,6 @@
     background-color: #1e598c;
   }
   
-  /* Responsive Design */
   @media (max-width: 768px) {
 
     .template-form-container{
@@ -109,15 +119,17 @@
     }
     
     .template-add-btn{
-      font-size: 0.5rem;
+      font-size: 0.8rem;
+    }
+    .template-remove-btn{
+      font-size: 0.8rem;
     }
   
-    .template-submit-btn {
-
+    .template-submit-btn, .template-clear-btn {
       font-size: 0.8rem;
       cursor: pointer;
-      min-width: 100px;
-      padding: 10px 0px;
+      min-width: 60px;
+      padding: 7px 0px;
     }
   }
   

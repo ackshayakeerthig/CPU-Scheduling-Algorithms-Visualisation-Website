@@ -9,16 +9,28 @@ function App() {
     <>
       <BrowserRouter>
         <ParticleBackground />
-        <Link to={"/"} className="home-btn" style={{zIndex:'1'}}>
+        <Link to={"/"} className="home-btn" style={{ zIndex: "1" }}>
           Home
         </Link>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/FCFS" element={<AlgorithmPage algorithmName="FCFS" />} />
+          <Route
+            path="/FCFS"
+            element={<AlgorithmPage algorithmName="FCFS" />}
+          />
           <Route path="/SJF" element={<AlgorithmPage algorithmName="SJF" />} />
-          <Route path="/SRTF" element={<AlgorithmPage algorithmName="SRTF" />} />
-          <Route path="/Priority" element={<AlgorithmPage algorithmName="Priority" />} />
-          <Route path="/RoundRobin" element={<AlgorithmPage algorithmName="RoundRobin" />} />
+          <Route
+            path="/SRTF"
+            element={<AlgorithmPage algorithmName="SRTF" />}
+          />
+          <Route
+            path="/Priority"
+            element={<AlgorithmPage algorithmName="Priority" />}
+          />
+          <Route
+            path="/RoundRobin"
+            element={<AlgorithmPage algorithmName="RoundRobin" />}
+          />
         </Routes>
       </BrowserRouter>
     </>
