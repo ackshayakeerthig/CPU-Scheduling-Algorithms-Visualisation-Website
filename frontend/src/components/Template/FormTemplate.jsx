@@ -61,7 +61,9 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
 
   return (
     <div className="template-form-container">
-      <h2 className="template-title">{algorithm}</h2>
+      <h2 className="template-title">
+        {algorithm === "RoundRobin" ? "Round Robin" : algorithm}
+      </h2>
 
       <form className="template-form" onSubmit={handleSubmit}>
         {processes.map((process, index) => (
@@ -133,7 +135,7 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
         ))}
         {algorithm === "RoundRobin" && (
           <div className="template-quantum">
-            <label htmlFor="quantum">Time Quantum:</label>
+            <label htmlFor="quantum">Time Quantum : </label>
             <input
               type="number"
               id="quantum"

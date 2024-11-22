@@ -1,4 +1,4 @@
-const calculateSRTF = (processes) => {
+const SRTF = (processes) => {
   const n = processes.length;
   let currentTime = 0;
   let completed = 0;
@@ -77,4 +77,4 @@ const calculateSRTF = (processes) => {
   return result;
 };
 
-export default calculateSRTF;
+export default SRTF;
