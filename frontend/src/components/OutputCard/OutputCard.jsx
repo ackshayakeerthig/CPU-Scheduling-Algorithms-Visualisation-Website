@@ -1,9 +1,11 @@
 import { useState } from "react";
 import FormTemplate from "../../components/Template/FormTemplate";
 import "./OutputCard.css";
+import GanttChart from "../GanttChart/GanttChart";
 
 function OutputCard({ algorithm, calculateAlgorithm }) {
   const [output, setOutput] = useState([]);
+  console.log("Output array : ", output);
 
   return (
     <div className="card-container">
@@ -17,10 +19,10 @@ function OutputCard({ algorithm, calculateAlgorithm }) {
         </div>
         <div className="output-section">
           <OutputTable output={output} />
+          <h1>Gantt Chart</h1>
+          {output?.length > 0 ? <GanttChart output={output} /> : null}
         </div>
       </div>
-
-      {/* Render Gantt chart */}
     </div>
   );
 }
@@ -37,8 +39,10 @@ function OutputTable({ output }) {
 
   return (
     <>
-      <div style={{ display:"flex", justifyContent:"center", width:"100%"}}>
-        <h1 style={{ color: "#000000" }} className="output-table-title">Live Output Table</h1>
+      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+        <h1 style={{ color: "#000000" }} className="output-table-title">
+          Live Output Table
+        </h1>
       </div>
       <table className="output-table">
         <TableHead headings={tableHeadings} />
