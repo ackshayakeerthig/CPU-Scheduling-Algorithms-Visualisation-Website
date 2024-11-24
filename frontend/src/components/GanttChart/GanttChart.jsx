@@ -1,103 +1,110 @@
 import React from "react";
-import { Chart } from "react-google-charts";
 
-export default function GanttChart({ output }) {
-  const options = {
-    height: 200,
-    gantt: {
-      trackHeight: 32,
-      labelStyle: {
-        fontSize: 15,
-        color: "#ffffff", // White color for text
-      },
-      bar: {
-        color: "#4CAF50", // Green bars
-        radius: 5, // Rounded corners for bars
-      },
-    },
-    hAxis: {
-      format: "ss", // Format to show seconds on the x-axis (you can adjust this if needed)
-      viewWindow: {
-        min: new Date(2024, 10, 22, 0, 0, 0), // Start time 0:00
-        max: new Date(2024, 10, 22, 0, 0, output[output.length - 1].completion), // End time: Last process completion
-      },
-      gridlines: {
-        color: "#ddd", // Light gridline color
-        count: output[output.length - 1].completion + 1, // Set gridlines for each unit of time
-      },
-      ticks: Array.from(
-        { length: output[output.length - 1].completion + 1 },
-        (_, i) => new Date(2024, 10, 22, 0, 0, i) // Ticks for each second/unit (0, 1, 2, 3, ...)
-      ),
-      title: "Time (in seconds)", // x-axis title
-      titleTextStyle: {
-        color: "#4CAF50", // Green title
-        fontSize: 16,
-        italic: true,
-      },
-    },
-    vAxis: {
-      title: "Processes",
-      titleTextStyle: {
-        color: "#4CAF50",
-        fontSize: 16,
-        italic: true,
-      },
-      gridlines: {
-        color: "#ddd",
-      },
-    },
-    backgroundColor: "#f9f9f9",
-    tooltip: {
-      trigger: "both",
-      isHtml: true,
-      textStyle: {
-        color: "#333",
-        fontSize: 14,
-      },
-    },
-  };
+const getRandomColor = () => {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
-  // Start time at unit 0 (Midnight of 22nd Nov 2024)
-  const baseDate = new Date(2024, 10, 22, 0, 0, 0);
+const GanttChart = ({ processes = [] }) => {
+  console.log("Processes received by GanttChart:", processes);
 
-  // Transform the output into Gantt chart format
-  const data = [
-    [
-      { type: "string", label: "Task ID" },
-      { type: "string", label: "Task Name" },
-      { type: "string", label: "Resource" },
-      { type: "date", label: "Start Date" },
-      { type: "date", label: "End Date" },
-      { type: "number", label: "Duration" },
-      { type: "number", label: "Percent Complete" },
-      { type: "string", label: "Dependencies" },
-    ],
-    ...output.map((process) => {
-      const startDate = new Date(baseDate.getTime() + process.arrival * 1000); // Start time: Arrival time in seconds
-      const endDate = new Date(baseDate.getTime() + process.completion * 1000); // End time: Completion time in seconds
-
-      return [
-        process.id, // Task ID
-        `Process ${process.id}`, // Task Name
-        "CPU", // Resource
-        startDate, // Start Date
-        endDate, // End Date
-        null, // Duration (null because we provide start & end dates)
-        100, // Percent Complete
-        null, // Dependencies
-      ];
-    }),
+  // Define colors for up to 10 processes
+  const colors = [
+    "#FF5733",
+    "#33FF57",
+    "#3357FF",
+    "#FFC300",
+    "#DA33FF",
+    "#33FFF5",
+    "#FF33A8",
+    "#A833FF",
+    "#33A8FF",
+    "#FF8C33",
   ];
 
-  return (
-    <Chart
-      chartType="Gantt"
-      data={data}
-      options={options}
-      width="100%"
-      height="200px"
-      legendToggle
-    />
+  // Create a color mapping based on process IDs
+  const colorMap = {};
+  processes.forEach((process) => {
+    const colorIndex = parseInt(process.id.replace("P", ""), 10) - 1; // Convert ID to number
+    if (colorIndex >= 0 && colorIndex < colors.length) {
+      colorMap[process.id] = colors[colorIndex];
+    } else {
+      colorMap[process.id] = getRandomColor(); // Dynamic color if out of bounds
+    }
+  });
+
+  // Flatten and map processes to segments with proper color assignment
+  const ganttSegments = processes.flatMap((process) =>
+    process.ganttValues.map(([start, end]) => ({
+      id: process.id,
+      start,
+      end,
+      color: colorMap[process.id],
+    }))
   );
-}
+
+  // Sort segments by start time
+  ganttSegments.sort((a, b) => a.start - b.start);
+
+  // Determine the overall timeline
+  const maxTime =
+    ganttSegments.length > 0
+      ? Math.max(...ganttSegments.map((segment) => segment.end))
+      : 0;
+  const timeline = Array.from({ length: maxTime }, (_, i) => i);
+
+  return (
+    <div>
+      <div
+        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      >
+        {timeline.map((time) => {
+          const activeSegment = ganttSegments.find(
+            (segment) => time >= segment.start && time < segment.end
+          );
+
+          return (
+            <div
+              key={`time-slot-${time}`}
+              style={{
+                backgroundColor: activeSegment
+                  ? activeSegment.color
+                  : "#E0E0E0", // Idle color
+                width: "60px",
+                height: "100px",
+                border: "1px solid #000",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "#000",
+                fontSize: "12px",
+              }}
+            >
+              {activeSegment ? `P${activeSegment.id.replace("P", "")}` : ""}
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ marginTop: "10px", display: "flex" }}>
+        {timeline.map((time) => (
+          <div
+            key={`time-label-${time}`}
+            style={{
+              width: "60px",
+              // textAlign: "center",
+              fontSize: "12px",
+            }}
+          >
+            {time}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default GanttChart;

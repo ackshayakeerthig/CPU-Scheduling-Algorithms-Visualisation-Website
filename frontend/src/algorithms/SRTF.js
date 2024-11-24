@@ -3,7 +3,7 @@ const SRTF = (processes) => {
   let currentTime = 0;
   let completed = 0;
   let result = [];
-  
+
   // Initialize the processes with their arrival, burst, and remaining times
   processes = processes.map((p) => ({
     id: p.id,
@@ -14,67 +14,95 @@ const SRTF = (processes) => {
     turnaround: 0,
     waiting: 0,
     completionPercentage: [],
+    ganttValues: [],
   }));
 
   // Sort processes by arrival time
   processes.sort((a, b) => a.arrival - b.arrival);
 
+  let previousIndex = -1;
+  let startTime = -1;
+
   // While not all processes are completed
   while (completed < n) {
-    let idx = -1;
-    let minRemainingTime = Number.MAX_VALUE;
+    let currentIndex = findNextProcess(processes, n, currentTime);
 
-    // Find the process with the shortest remaining time that has arrived
-    for (let i = 0; i < n; i++) {
-      if (
-        processes[i].arrival <= currentTime && // Process has arrived
-        processes[i].remaining > 0 && // Process hasn't completed
-        processes[i].remaining < minRemainingTime // Find the shortest remaining time
-      ) {
-        idx = i;
-        minRemainingTime = processes[i].remaining;
-      }
-    }
-
-    if (idx === -1) {
+    if (currentIndex === -1) {
       // No process is ready to run, increment the time
       currentTime++;
       continue;
     }
 
+    // If we are starting a new process or switching, record the Gantt chart value
+    if (previousIndex !== currentIndex) {
+      if (previousIndex !== -1) {
+        // Record the Gantt segment for the previous process
+        processes[previousIndex].ganttValues.push([startTime, currentTime]);
+      }
+      startTime = currentTime; // Update start time for the new process
+    }
+
     // Execute the selected process for 1 unit of time
-    processes[idx].remaining--;
-    
+    processes[currentIndex].remaining--;
+
     // Track completion percentage as the process runs
-    processes[idx].completionPercentage.push(
-      ((1 - processes[idx].remaining / processes[idx].burst) * 100).toFixed(2)
+    processes[currentIndex].completionPercentage.push(
+      parseFloat(
+        (
+          (1 - processes[currentIndex].remaining / processes[currentIndex].burst) * 100
+        ).toFixed(2)
+      )
     );
-    
+
     currentTime++;
+    previousIndex = currentIndex;
 
     // If the process has completed execution
-    if (processes[idx].remaining === 0) {
+    if (processes[currentIndex].remaining === 0) {
       completed++;
 
+      // Record the last Gantt segment for the completed process
+      processes[currentIndex].ganttValues.push([startTime, currentTime]);
+
       // Set the completion time and calculate turnaround and waiting times
-      processes[idx].completion = currentTime;
-      processes[idx].turnaround = processes[idx].completion - processes[idx].arrival;
-      processes[idx].waiting = processes[idx].turnaround - processes[idx].burst;
+      processes[currentIndex].completion = currentTime;
+      processes[currentIndex].turnaround =
+        processes[currentIndex].completion - processes[currentIndex].arrival;
+      processes[currentIndex].waiting =
+        processes[currentIndex].turnaround - processes[currentIndex].burst;
 
       // Store the completed process results
       result.push({
-        id: processes[idx].id,
-        arrival: processes[idx].arrival,
-        burst: processes[idx].burst,
-        completion: processes[idx].completion,
-        turnaround: processes[idx].turnaround,
-        waiting: processes[idx].waiting,
-        completionPercentage: processes[idx].completionPercentage, // Save the completion percentages
+        id: processes[currentIndex].id,
+        arrival: processes[currentIndex].arrival,
+        burst: processes[currentIndex].burst,
+        completion: processes[currentIndex].completion,
+        turnaround: processes[currentIndex].turnaround,
+        waiting: processes[currentIndex].waiting,
+        completionPercentage: processes[currentIndex].completionPercentage,
+        ganttValues: processes[currentIndex].ganttValues, // Save the Gantt chart
       });
     }
   }
-
+  console.log(result);
   return result;
 };
+
+function findNextProcess(processes, n, currentTime) {
+  // Find the process with the shortest remaining time that has arrived
+  let minRemainingTime = Number.MAX_VALUE;
+  let returnIndex = -1;
+  for (let i = 0; i < n; i++) {
+    if (
+      processes[i].arrival <= currentTime && // Process has arrived
+      processes[i].remaining > 0 && // Process hasn't completed
+      processes[i].remaining < minRemainingTime // Find the shortest remaining time
+    ) {
+      returnIndex = i;
+      minRemainingTime = processes[i].remaining;
+    }
+  }
+  return returnIndex;
+}
 
 export default SRTF;

@@ -20,7 +20,7 @@ function OutputCard({ algorithm, calculateAlgorithm }) {
         <div className="output-section">
           <OutputTable output={output} />
           <h1>Gantt Chart</h1>
-          {output?.length > 0 ? <GanttChart output={output} /> : null}
+          {output.length > 0 ? <GanttChart processes={output} /> : null}
         </div>
       </div>
     </div>
