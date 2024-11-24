@@ -1,10 +1,11 @@
 const RoundRobin = (processes, quantum) => {
   const n = processes.length;
   let currentTime = 0;
+  let completed = 0;
   let queue = [];
   let result = [];
 
-  // Initialize processes with their arrival, burst, and remaining burst times
+  // Initialize the processes with their attributes
   processes = processes.map((p) => ({
     id: p.id,
     arrival: parseInt(p.arrival, 10),
@@ -20,16 +21,16 @@ const RoundRobin = (processes, quantum) => {
   // Sort processes by arrival time
   processes.sort((a, b) => a.arrival - b.arrival);
 
-  // Add first set of processes to the queue
-  queue.push(...processes.filter((p) => p.arrival <= currentTime));
-
-  let previousIndex = -1;
+  let currentIndex = -1;
   let startTime = 0;
 
-  // Loop until all processes are completed
-  while (queue.length > 0 || processes.some((p) => p.remaining > 0)) {
+  // Add processes arriving at time 0 to the queue
+  queue.push(...processes.filter((p) => p.arrival <= currentTime));
+
+  // While not all processes are completed
+  while (completed < n) {
     if (queue.length === 0) {
-      // If no process is ready, fast-forward time to the next arrival
+      // If no processes are ready, increment time and add new arrivals
       currentTime++;
       queue.push(...processes.filter((p) => p.arrival === currentTime));
       continue;
@@ -38,17 +39,24 @@ const RoundRobin = (processes, quantum) => {
     // Dequeue the next process
     const process = queue.shift();
 
-    // Calculate time slice for execution
-    const timeSlice = Math.min(process.remaining, quantum);
-
-    // Record the Gantt chart value when the process starts
-    if (previousIndex !== -1 && previousIndex !== process.id) {
-      processes[previousIndex].ganttValues.push([startTime, currentTime]);
+    if (currentIndex === -1 && process) {
+      currentIndex = process.id;
       startTime = currentTime;
     }
 
-    // Execute the process for the time slice
+    if (currentIndex !== -1 && process && currentIndex !== process.id) {
+      processes.find((p) => p.id === currentIndex).ganttValues.push([
+        startTime,
+        currentTime,
+      ]);
+      currentIndex = process.id;
+      startTime = currentTime;
+    }
+
+    // Execute the process for the quantum or until completion
+    const timeSlice = Math.min(process.remaining, quantum);
     process.remaining -= timeSlice;
+    currentTime += timeSlice;
 
     // Track completion percentage as the process runs
     process.completionPercentage.push(
@@ -57,33 +65,28 @@ const RoundRobin = (processes, quantum) => {
       ).toFixed(2)
     );
 
-    currentTime += timeSlice;
-
-    // Log execution (for debugging purposes)
-    console.log(
-      `Time ${currentTime - timeSlice}-${currentTime}: Process ${process.id} executed for ${timeSlice} unit(s)`
-    );
-
-    // Add newly arrived processes to the queue
+    // Add new arrivals to the queue
     queue.push(
       ...processes.filter(
         (p) =>
           p.arrival > currentTime - timeSlice &&
           p.arrival <= currentTime &&
-          p.remaining > 0
+          p.remaining > 0 &&
+          !queue.includes(p)
       )
     );
 
+    // If the process is not finished, re-add it to the queue
     if (process.remaining > 0) {
-      // If the process is not finished, re-add it to the queue
       queue.push(process);
     } else {
-      // If the process is finished, calculate its metrics
+      // If the process is finished, calculate metrics
+      completed++;
       process.completion = currentTime;
       process.turnaround = process.completion - process.arrival;
       process.waiting = process.turnaround - process.burst;
 
-      // Record the last Gantt chart value for the completed process
+      // Record the Gantt chart value for the completed process
       process.ganttValues.push([startTime, currentTime]);
 
       // Store completed process results
@@ -97,13 +100,7 @@ const RoundRobin = (processes, quantum) => {
         completionPercentage: process.completionPercentage,
         ganttValues: process.ganttValues, // Save the Gantt chart
       });
-
-      // Log process completion (for debugging purposes)
-      console.log(`Process ${process.id} completed at time ${currentTime}`);
     }
-
-    // Update the previous process index
-    previousIndex = process.id;
   }
 
   return result;
