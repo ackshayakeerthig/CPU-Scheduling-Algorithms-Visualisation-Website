@@ -20,43 +20,44 @@ const SRTF = (processes) => {
   // Sort processes by arrival time
   processes.sort((a, b) => a.arrival - b.arrival);
 
-  let previousIndex = -1;
-  let startTime = -1;
+  let currentIndex = -1;
+  let startTime = 0;
 
   // While not all processes are completed
   while (completed < n) {
-    let currentIndex = findNextProcess(processes, n, currentTime);
+    let processIndex = findNextProcess(processes, n, currentTime);
 
-    if (currentIndex === -1) {
+    if (processIndex === -1) {
       // No process is ready to run, increment the time
+      currentIndex = processIndex;
       currentTime++;
       continue;
     }
 
-    // If we are starting a new process or switching, record the Gantt chart value
-    if (previousIndex !== currentIndex) {
-      if (previousIndex !== -1) {
-        // Record the Gantt segment for the previous process
-        processes[previousIndex].ganttValues.push([startTime, currentTime]);
-      }
-      startTime = currentTime; // Update start time for the new process
+    if (currentIndex === -1 && processIndex >= 0){
+      currentIndex = processIndex;
+      startTime = currentTime;
+    }
+
+    if (currentIndex>=0 && processIndex>=0 && currentIndex !== processIndex){
+      processes[currentIndex].ganttValues.push([startTime, currentTime]);
+      currentIndex = processIndex;
+      startTime = currentTime;
     }
 
     // Execute the selected process for 1 unit of time
     processes[currentIndex].remaining--;
 
     // Track completion percentage as the process runs
-    processes[currentIndex].completionPercentage.push(
-      parseFloat(
-        (
-          (1 - processes[currentIndex].remaining / processes[currentIndex].burst) * 100
-        ).toFixed(2)
-      )
-    );
+    // processes[currentIndex].completionPercentage.push(
+    //   parseFloat(
+    //     (
+    //       (1 - processes[currentIndex].remaining / processes[currentIndex].burst) * 100
+    //     ).toFixed(2)
+    //   )
+    // );
 
     currentTime++;
-    previousIndex = currentIndex;
-
     // If the process has completed execution
     if (processes[currentIndex].remaining === 0) {
       completed++;
