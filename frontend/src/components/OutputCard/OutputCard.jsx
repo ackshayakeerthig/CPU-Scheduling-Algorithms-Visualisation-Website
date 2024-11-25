@@ -2,6 +2,7 @@ import { useState } from "react";
 import FormTemplate from "../../components/Template/FormTemplate";
 import "./OutputCard.css";
 import GanttChart from "../GanttChart/GanttChart";
+import SimulatedClock from "../ProgessBars/SimulatedClock";
 
 function OutputCard({ algorithm, calculateAlgorithm }) {
   const [output, setOutput] = useState([]);
@@ -21,6 +22,12 @@ function OutputCard({ algorithm, calculateAlgorithm }) {
           <OutputTable output={output} />
           <h1>Gantt Chart</h1>
           {output.length > 0 ? <GanttChart processes={output} /> : null}
+          <div>
+            <h1>Progress Bars</h1>
+            {output.length > 0 ? (
+              <SimulatedClock processes={output} tickRate={500} />
+            ) : null}
+          </div>
         </div>
       </div>
     </div>
