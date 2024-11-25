@@ -23,7 +23,9 @@ const SimulatedClock = ({ processes, tickRate = 1000 }) => {
 
   useEffect(() => {
     const allCompleted = processes.every((process) => {
-      const lastEndTime = Math.max(...process.ganttValues.map(([_, end]) => end));
+      const lastEndTime = Math.max(
+        ...process.ganttValues.map(([_, end]) => end)
+      );
       return clock > lastEndTime;
     });
 
@@ -33,9 +35,10 @@ const SimulatedClock = ({ processes, tickRate = 1000 }) => {
   }, [clock, processes]);
 
   return (
-    <div>
-      <h3>Simulated Clock: {clock}s</h3>
-      {!isRunning && (
+    <>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems:"center", marginBottom:"10px"}}>
+        <h3>Simulated Clock: {clock}s</h3>
+
         <button
           onClick={handleReplay}
           style={{
@@ -49,9 +52,9 @@ const SimulatedClock = ({ processes, tickRate = 1000 }) => {
         >
           Replay
         </button>
-      )}
+      </div>
       <ProgressBars processes={processes} clock={clock} />
-    </div>
+    </>
   );
 };
 

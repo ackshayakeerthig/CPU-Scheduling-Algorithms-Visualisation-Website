@@ -11,22 +11,28 @@ function OutputCard({ algorithm, calculateAlgorithm }) {
   return (
     <div className="card-container">
       <div className="dashboard">
-        <div className="input-section">
-          <FormTemplate
-            algorithm={algorithm}
-            setOutput={setOutput}
-            calculateAlgorithm={calculateAlgorithm}
-          />
-        </div>
-        <div className="output-section">
-          <OutputTable output={output} />
-          <h1>Gantt Chart</h1>
-          {output.length > 0 ? <GanttChart processes={output} /> : null}
-          <div>
+        <div className="upper-section">
+          <div className="input-section">
+            <FormTemplate
+              algorithm={algorithm}
+              setOutput={setOutput}
+              calculateAlgorithm={calculateAlgorithm}
+            />
+          </div>
+          <div className="progress-section">
             <h1>Progress Bars</h1>
             {output.length > 0 ? (
               <SimulatedClock processes={output} tickRate={500} />
             ) : null}
+          </div>
+        </div>
+        <div className="lower-section">
+          <div className="output-table-section">
+            <OutputTable output={output} />
+          </div>
+          <div className="gantt-section">
+            <h1>Gantt Chart</h1>
+            {output.length > 0 ? <GanttChart processes={output} /> : null}
           </div>
         </div>
       </div>
