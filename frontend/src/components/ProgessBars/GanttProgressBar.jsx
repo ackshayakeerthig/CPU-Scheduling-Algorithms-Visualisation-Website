@@ -29,10 +29,19 @@ const GanttProgressBar = ({ process, clock }) => {
 
   return (
     <div style={{ marginBottom: "20px" }}>
-      <div>{`Process ${process.id}`}</div>
       <div
         style={{
-          border: "1px solid #ccc",
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "2%",
+        }}
+      >
+        <div>{`Process ${process.id}`}</div>
+        <div>{progress.toFixed(2)}%</div>
+      </div>
+      <div
+        style={{
+          border: "1px solid #000000",
           width: "100%",
           position: "relative",
         }}
@@ -46,7 +55,6 @@ const GanttProgressBar = ({ process, clock }) => {
           }}
         />
       </div>
-      <div>{progress.toFixed(2)}%</div>
     </div>
   );
 };

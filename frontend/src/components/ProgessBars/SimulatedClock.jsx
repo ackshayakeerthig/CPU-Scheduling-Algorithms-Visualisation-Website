@@ -36,18 +36,27 @@ const SimulatedClock = ({ processes, tickRate = 1000 }) => {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems:"center", marginBottom:"10px"}}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "10px",
+        }}
+      >
         <h3>Simulated Clock: {clock}s</h3>
 
         <button
           onClick={handleReplay}
           style={{
-            padding: "10px 20px",
-            backgroundColor: "#4caf50",
+            backgroundColor: "#3498db",
             color: "white",
             border: "none",
             borderRadius: "5px",
+            padding: "10px 5px",
+            fontSize: "1rem",
             cursor: "pointer",
+            minWidth: "80px",
           }}
         >
           Replay

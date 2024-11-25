@@ -22,7 +22,7 @@ function OutputCard({ algorithm, calculateAlgorithm }) {
           <div className="progress-section">
             <h1>Progress Bars</h1>
             {output.length > 0 ? (
-              <SimulatedClock processes={output} tickRate={500} />
+              <SimulatedClock processes={output} tickRate={1000} />
             ) : null}
           </div>
         </div>
