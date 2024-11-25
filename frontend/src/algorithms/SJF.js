@@ -13,21 +13,16 @@ const SJF = (processes) => {
     completion: 0,
     turnaround: 0,
     waiting: 0,
-    completionPercentage: [],
-    ganttValues: [],
+    ganttValues: [], // Stores start and end time pairs for Gantt chart
   }));
 
   // Sort processes by arrival time
   processes.sort((a, b) => a.arrival - b.arrival);
 
-  let previousIndex = -1;
-  let startTime = 0;
-
-  // While not all processes are completed
   while (completed < n) {
     // Find all processes that have arrived and are not completed
     const readyQueue = processes.filter(
-      (p) => p.arrival <= currentTime && p.completion === 0
+      (p) => p.arrival <= currentTime && p.remaining > 0
     );
 
     if (readyQueue.length === 0) {
@@ -37,30 +32,22 @@ const SJF = (processes) => {
     }
 
     // Select the process with the shortest burst time
-    readyQueue.sort((a, b) => a.burst - b.burst);
+    readyQueue.sort((a, b) => a.remaining - b.remaining);
     const selectedProcess = readyQueue[0];
 
-    // Record the Gantt chart value when the process starts
-    if (previousIndex !== -1 && previousIndex !== selectedProcess.id) {
-      processes[previousIndex].ganttValues.push([startTime, currentTime]);
-      startTime = currentTime;
-    }
+    // Record the Gantt chart value (start and end times)
+    selectedProcess.ganttValues.push([currentTime, currentTime + selectedProcess.remaining]);
 
     // Execute the selected process
+    currentTime += selectedProcess.remaining;
     selectedProcess.remaining = 0;
-    selectedProcess.completion = currentTime + selectedProcess.burst;
-
-    // Track completion percentage as the process runs
-    selectedProcess.completionPercentage.push(
-      parseFloat(((selectedProcess.burst - selectedProcess.remaining) / selectedProcess.burst) * 100).toFixed(2)
-    );
+    selectedProcess.completion = currentTime;
 
     // Calculate turnaround time and waiting time
     selectedProcess.turnaround = selectedProcess.completion - selectedProcess.arrival;
     selectedProcess.waiting = selectedProcess.turnaround - selectedProcess.burst;
 
-    // Update current time and increment completed count
-    currentTime = selectedProcess.completion;
+    // Update completed count
     completed++;
 
     // Store the completed process in the result array
@@ -71,15 +58,11 @@ const SJF = (processes) => {
       completion: selectedProcess.completion,
       turnaround: selectedProcess.turnaround,
       waiting: selectedProcess.waiting,
-      completionPercentage: selectedProcess.completionPercentage,
       ganttValues: selectedProcess.ganttValues, // Save the Gantt chart
     });
 
     // Log process completion (for debugging purposes)
     console.log(`Process ${selectedProcess.id} completed at time ${currentTime}`);
-    
-    // Update the previous process index
-    previousIndex = selectedProcess.id;
   }
 
   return result;

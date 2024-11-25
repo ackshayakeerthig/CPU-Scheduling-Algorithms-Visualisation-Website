@@ -63,6 +63,7 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
   const handleClearForm = () => {
     setProcesses([{ id: "", arrival: "", burst: "", priority: "" }]);
     setQuantum("");
+    setOutput([]);
   };
 
   return (
