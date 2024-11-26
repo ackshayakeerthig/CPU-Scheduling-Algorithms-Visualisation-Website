@@ -58,9 +58,14 @@ const GanttChart = ({ processes = [] }) => {
   const timeline = Array.from({ length: maxTime }, (_, i) => i);
 
   return (
-    <div>
+    <div style={{ width: "100%", overflowX: "auto" }}>
       <div
-        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          width: "100%",
+        }}
       >
         {timeline.map((time) => {
           const activeSegment = ganttSegments.find(
@@ -74,7 +79,8 @@ const GanttChart = ({ processes = [] }) => {
                 backgroundColor: activeSegment
                   ? activeSegment.color
                   : "#E0E0E0", // Idle color
-                width: "60px",
+                flex: "1 1 auto",
+                minWidth: "30px", // Minimum size for each time slot
                 height: "100px",
                 border: "1px solid #000",
                 display: "flex",
@@ -89,12 +95,19 @@ const GanttChart = ({ processes = [] }) => {
           );
         })}
       </div>
-      <div style={{ marginTop: "10px", display: "flex" }}>
+      <div
+        style={{
+          marginTop: "10px",
+          display: "flex",
+          width: "100%",
+        }}
+      >
         {timeline.map((time) => (
           <div
             key={`time-label-${time}`}
             style={{
-              width: "60px",
+              flex: "1 1 auto",
+              minWidth: "30px",
               // textAlign: "center",
               fontSize: "12px",
             }}

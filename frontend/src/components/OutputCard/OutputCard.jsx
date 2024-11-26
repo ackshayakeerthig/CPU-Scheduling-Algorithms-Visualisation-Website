@@ -3,6 +3,7 @@ import FormTemplate from "../../components/Template/FormTemplate";
 import "./OutputCard.css";
 import GanttChart from "../GanttChart/GanttChart";
 import SimulatedClock from "../ProgessBars/SimulatedClock";
+import SchedulingMetrics from "../SchedulingMetrics/SchedulingMetrics";
 
 function OutputCard({ algorithm, calculateAlgorithm }) {
   const [output, setOutput] = useState([]);
@@ -27,8 +28,13 @@ function OutputCard({ algorithm, calculateAlgorithm }) {
           </div>
         </div>
         <div className="lower-section">
-          <div className="output-table-section">
-            <OutputTable output={output} />
+          <div className="output-table-secheduling-metrics">
+            <div className="output-table-section">
+              <OutputTable output={output} />
+            </div>
+            <div className="scheduling-metrics-section">
+              <SchedulingMetrics processes={output} />
+            </div>
           </div>
           <div className="gantt-section">
             <h1>Gantt Chart</h1>

@@ -54,6 +54,16 @@
   border: 1px solid black
 }
 
+.output-table-secheduling-metrics{
+  display: flex;
+  gap: 15px;
+}
+
+.scheduling-metrics-section{
+  border: 1px solid black;
+  min-width: 32%;
+}
+
 /* Title of output section */
 h1 {
   text-align: center;
