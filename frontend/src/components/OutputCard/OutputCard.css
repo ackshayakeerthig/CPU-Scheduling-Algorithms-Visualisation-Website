@@ -129,6 +129,14 @@ h1 {
   .output-table-title{
     font-size: 1.2rem;
   }
+  
+  .output-table-secheduling-metrics{
+    flex-direction: column;
+  }
+  
+  .scheduling-metrics-section{
+    width: 100%;
+  }
 }
 
 @media (max-width: 368px) {
@@ -145,4 +153,5 @@ h1 {
     padding: 5px;
     font-size: 0.5rem;
   }
+
 }
