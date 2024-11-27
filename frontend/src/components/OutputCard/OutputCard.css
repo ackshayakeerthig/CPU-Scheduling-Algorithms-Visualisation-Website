@@ -102,6 +102,11 @@ h1 {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+
+  .card-container {
+    margin: 20% 0;
+  }
+  
   h1 {
     font-size: 1.2rem;
   }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProgressBars from "./ProgressBars";
+import "./SimulatedClock.css";
 
 const SimulatedClock = ({ processes, tickRate = 1000 }) => {
   const [clock, setClock] = useState(0);
@@ -48,6 +49,7 @@ const SimulatedClock = ({ processes, tickRate = 1000 }) => {
 
         <button
           onClick={handleReplay}
+          className="replay-btn"
           style={{
             backgroundColor: "#3498db",
             color: "white",
@@ -56,7 +58,7 @@ const SimulatedClock = ({ processes, tickRate = 1000 }) => {
             padding: "10px 5px",
             fontSize: "1rem",
             cursor: "pointer",
-            minWidth: "80px",
+            minWidth: "20%",
           }}
         >
           Replay
