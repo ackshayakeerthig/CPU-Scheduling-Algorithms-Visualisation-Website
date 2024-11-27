@@ -102,6 +102,9 @@ h1 {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  h1 {
+    font-size: 1.2rem;
+  }
 
   .upper-section{
     display: flex;
@@ -115,16 +118,19 @@ h1 {
     flex-direction: column; /* Stack input and output sections vertically */
     padding: 10px;
   }
+
+  .output-table-secheduling-metrics{
+    flex-direction: column;
+  }
   
   .output-table th,
   .output-table td {
-    padding: 7px;
     font-size: 0.7rem;
+    width: 20px;
+    padding: 9px 0;
+
   }
 
-  .output-table th{
-    padding: 9px;
-  }
 
   .output-table-title{
     font-size: 1.2rem;

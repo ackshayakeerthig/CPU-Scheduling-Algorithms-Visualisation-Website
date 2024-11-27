@@ -5,3 +5,15 @@
     margin: 4% 5%;
     background-color: aqua;
 }
+@media (max-width: 768px) {
+    .metric-header{
+        margin: 0;
+    }
+
+    .metrics-div{
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+
+   
+}

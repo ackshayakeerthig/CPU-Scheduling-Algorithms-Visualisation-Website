@@ -21,7 +21,7 @@ const SchedulingMetrics = ({ processes = [] }) => {
 
   return (
     <div>
-      <h1 style={{ margin: "7% 0" }}>Scheduling Metrics</h1>
+      <h1 className="metric-header" style={{ margin: "7% 0" }}>Scheduling Metrics</h1>
 
       <div className="metrics-div">
         <strong>Average Wait Time:</strong> {avgWaitTime.toFixed(2)} s
