@@ -3,7 +3,7 @@ import Home from "./components/Home/Home";
 import ParticleBackground from "./components/ParticleBackground/ParticleBackground";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import AlgorithmPage from "./pages/AlgorithmPage/AlgorithmPage";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   return (
