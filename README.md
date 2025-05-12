@@ -4,6 +4,7 @@ An interactive web application to visualize and understand various CPU schedulin
 
 [![GitHub VishalBhat07](https://img.shields.io/badge/GitHub-VishalBhat07-red?style=for-the-badge&logo=github)](https://github.com/VishalBhat07)
 [![GitHub SRNI-2005](https://img.shields.io/badge/GitHub-srni--2005-blue?style=for-the-badge&logo=github)](https://github.com/SRNI-2005)
+[![GitHub GowdaVarun](https://img.shields.io/badge/GitHub-GowdaVarun-green?style=for-the-badge&logo=github)](https://github.com/GowdaVarun)
 
 ## Features
 
