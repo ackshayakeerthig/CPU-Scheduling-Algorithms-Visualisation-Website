@@ -7,6 +7,7 @@ import RR from "../../algorithms/RR.js";
 import SJF from "../../algorithms/SJF.js";
 import Priority from "../../algorithms/priority.js";
 import FCFS from "../../algorithms/FCFS.js";
+import InfoPopup from "../../components/InfoPopup/InfoPopup.jsx";
 
 function selectAlgorithm(algorithmName) {
   const algorithms = {
@@ -23,6 +24,7 @@ function selectAlgorithm(algorithmName) {
 function AlgorithmPage({ algorithmName }) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
+      <InfoPopup algorithmName={algorithmName} />
       <OutputCard
         algorithm={algorithmName}
         calculateAlgorithm={selectAlgorithm(algorithmName)} // Pass the loaded algorithm function

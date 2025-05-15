@@ -1,0 +1,5 @@
+{
+  "title": "First-Come, First-Served (FCFS)",
+  "definition": "FCFS is the simplest CPU scheduling algorithm that schedules processes in the order they arrive in the ready queue.",
+  "explanation": "It is a non-preemptive algorithm. Once a process starts execution, it runs until it finishes. This can cause longer waiting times if a short process is behind a long one."
+}
