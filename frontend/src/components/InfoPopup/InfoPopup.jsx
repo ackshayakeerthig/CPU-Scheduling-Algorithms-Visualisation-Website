@@ -31,15 +31,15 @@ function InfoPopup({ algorithmName }) {
 
             {info ? (
               <div className="popup-content">
-                <h2>{algorithmName} Algorithm</h2>
+                <h2>{info.algorithmName}</h2>
 
                 <section>
-                  <h3>📘 Definition</h3>
+                  <h3>Definition</h3>
                   <p>{info.definition}</p>
                 </section>
 
                 <section>
-                  <h3>⚙️ Working</h3>
+                  <h3>Working</h3>
                   <p>{info.working.description}</p>
 
                   {info.working.example?.processTable && (
@@ -89,7 +89,7 @@ function InfoPopup({ algorithmName }) {
 
                 {info.characteristics && (
                   <section>
-                    <h3>🔍 Characteristics</h3>
+                    <h3>Characteristics</h3>
                     <table>
                       <tbody>
                         {info.characteristics.map((item, idx) => (
@@ -105,29 +105,59 @@ function InfoPopup({ algorithmName }) {
                   </section>
                 )}
 
-                {info.performance_issues && (
+                {info.performanceIssues && (
                   <section>
-                    <h3>⚠️ Performance Issues</h3>
+                    <h3>Performance Issues</h3>
                     <p>
-                      <strong>{info.performance_issues.title}:</strong>{" "}
-                      {info.performance_issues.description}
+                      <strong>{info.performanceIssues.title}:</strong>{" "}
+                      {info.performanceIssues.description}
                     </p>
                   </section>
                 )}
 
-                <section>
-                  <h3>📊 Complexity</h3>
-                  <p>
-                    <strong>Time:</strong> {info.complexity.time}
-                  </p>
-                  <p>
-                    <strong>Space:</strong> {info.complexity.space}
-                  </p>
-                </section>
+                {info.daaStrategy && (
+                  <section>
+                    <h3>DAA Strategy</h3>
+                    <p>
+                      <strong>Type:</strong> {info.daaStrategy.type}
+                    </p>
+                    <p>
+                      <strong>Justification:</strong> {info.daaStrategy.justification}
+                    </p>
+                  </section>
+                )}
+
+                {info.dataStructures && (
+                  <section>
+                    <h3>Data Structures</h3>
+                    <p>
+                      <strong>Used:</strong> {info.dataStructures.used.join(", ")}
+                    </p>
+                    <p>
+                      <strong>Justification:</strong> {info.dataStructures.justification}
+                    </p>
+                  </section>
+                )}
+
+                {info.efficiencyAnalysis && (
+                  <section>
+                    <h3>Complexity</h3>
+                    <p>
+                      <strong>Time:</strong>{" "}
+                      {info.efficiencyAnalysis.timeComplexity.notation} —{" "}
+                      {info.efficiencyAnalysis.timeComplexity.reasoning}
+                    </p>
+                    <p>
+                      <strong>Space:</strong>{" "}
+                      {info.efficiencyAnalysis.spaceComplexity.notation} —{" "}
+                      {info.efficiencyAnalysis.spaceComplexity.reasoning}
+                    </p>
+                  </section>
+                )}
 
                 {info.advantages && (
                   <section>
-                    <h3>✅ Advantages</h3>
+                    <h3>Advantages</h3>
                     <ul>
                       {info.advantages.map((adv, idx) => (
                         <li key={idx}>{adv}</li>
@@ -138,7 +168,7 @@ function InfoPopup({ algorithmName }) {
 
                 {info.disadvantages && (
                   <section>
-                    <h3>❌ Disadvantages</h3>
+                    <h3>Disadvantages</h3>
                     <ul>
                       {info.disadvantages.map((disadv, idx) => (
                         <li key={idx}>{disadv}</li>
@@ -147,18 +177,35 @@ function InfoPopup({ algorithmName }) {
                   </section>
                 )}
 
-                <section>
-                  <h3>🔗 Resources</h3>
-                  <ul>
-                    {info.resources.map((res, idx) => (
-                      <li key={idx}>
-                        <a href={res.url} target="_blank" rel="noreferrer">
-                          {res.title}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
+                {info.faq && (
+                  <section>
+                    <h3>FAQs</h3>
+                    <ul>
+                      {info.faq.map((item, idx) => (
+                        <li key={idx}>
+                          <strong>Q: {item.question}</strong>
+                          <br />
+                          A: {item.answer}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+
+                {info.resources && (
+                  <section>
+                    <h3>Resources</h3>
+                    <ul>
+                      {info.resources.map((res, idx) => (
+                        <li key={idx}>
+                          <a href={res.url} target="_blank" rel="noreferrer">
+                            {res.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
               </div>
             ) : (
               <p>Loading info...</p>

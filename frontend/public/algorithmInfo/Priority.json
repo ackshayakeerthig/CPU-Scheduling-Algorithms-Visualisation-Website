@@ -1,0 +1,83 @@
+{
+  "algorithmName": "Priority Scheduling (Non-Preemptive)",
+  "definition": "Priority Scheduling assigns the CPU to the process with the highest priority (lowest priority number) from the ready queue. It is non-preemptive when the currently running process is allowed to finish before a new higher priority process runs.",
+  "working": {
+    "description": "The OS maintains a queue of ready processes with assigned priorities. The CPU executes the process with the highest priority next. If two processes have the same priority, FCFS order is used as a tie-breaker.",
+    "example": {
+      "processTable": {
+        "headers": ["Process", "Arrival Time (ms)", "Burst Time (ms)", "Priority"],
+        "rows": [
+          ["P1", "0", "4", "2"],
+          ["P2", "1", "3", "1"],
+          ["P3", "2", "5", "3"]
+        ]
+      },
+      "ganttChartImage": "/images/priority_gantt_chart.png",
+      "queueDiagramImage": "/images/priority_queue.png"
+    }
+  },
+  "dataStructures": {
+    "used": ["Priority Queue", "Array"],
+    "justification": "A priority queue efficiently selects the highest priority process, and arrays store process attributes."
+  },
+  "daaStrategy": {
+    "type": "Greedy",
+    "justification": "At each scheduling step, the algorithm greedily picks the process with the highest priority."
+  },
+  "efficiencyAnalysis": {
+    "analysisBasis": "Selecting highest priority process each time",
+    "timeComplexity": {
+      "notation": "O(n log n)",
+      "reasoning": "Using a priority queue or sorting processes by priority."
+    },
+    "spaceComplexity": {
+      "notation": "O(n)",
+      "reasoning": "Stores all process details and priorities."
+    }
+  },
+  "characteristics": [
+    { "feature": "Type", "description": "Non-preemptive" },
+    { "feature": "Strategy", "description": "Priority-based scheduling" },
+    { "feature": "Throughput", "description": "Can be high if priorities are balanced" },
+    { "feature": "Turnaround Time", "description": "Depends on priority distribution" },
+    { "feature": "Waiting Time", "description": "Lower for higher priority processes" }
+  ],
+  "performanceIssues": {
+    "title": "Starvation",
+    "description": "Low priority processes may suffer starvation if high priority processes keep arriving."
+  },
+  "advantages": [
+    "Improves response for important processes",
+    "More flexible than FCFS by considering priority",
+    "Simple to implement with sorting or priority queue"
+  ],
+  "disadvantages": [
+    "Starvation for low priority processes",
+    "Priority inversion problem if not handled",
+    "Non-preemptive version may delay urgent processes"
+  ],
+  "faq": [
+    {
+      "question": "How is priority assigned?",
+      "answer": "Priority can be assigned based on importance, deadline, or user preference."
+    },
+    {
+      "question": "Can priority scheduling be preemptive?",
+      "answer": "Yes, in preemptive priority scheduling, a running lower priority process can be interrupted."
+    },
+    {
+      "question": "How to avoid starvation?",
+      "answer": "Techniques like aging increase priority of waiting processes over time."
+    }
+  ],
+  "resources": [
+    {
+      "title": "GeeksforGeeks - Priority Scheduling",
+      "url": "https://www.geeksforgeeks.org/priority-scheduling-in-operating-system/"
+    },
+    {
+      "title": "YouTube - Priority Scheduling Explained",
+      "url": "https://www.youtube.com/watch?v=rsDGfFxSgiY"
+    }
+  ]
+}

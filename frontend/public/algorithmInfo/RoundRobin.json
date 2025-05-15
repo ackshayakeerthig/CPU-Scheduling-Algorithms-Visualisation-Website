@@ -1,0 +1,83 @@
+{
+  "algorithmName": "Round Robin Scheduling",
+  "definition": "Round Robin (RR) is a preemptive CPU scheduling algorithm where each process is assigned a fixed time quantum. The CPU cycles through processes in the ready queue, executing each for a time slice or until completion.",
+  "working": {
+    "description": "The OS maintains a circular queue of ready processes. Each process gets a fixed CPU time slice (quantum). If a process does not finish in its time slice, it goes to the end of the queue. This continues until all processes complete.",
+    "example": {
+      "processTable": {
+        "headers": ["Process", "Arrival Time (ms)", "Burst Time (ms)"],
+        "rows": [
+          ["P1", "0", "5"],
+          ["P2", "1", "3"],
+          ["P3", "2", "8"]
+        ]
+      },
+      "ganttChartImage": "/images/round_robin_gantt_chart.png",
+      "queueDiagramImage": "/images/fcfs_queue.png"
+    }
+  },
+  "dataStructures": {
+    "used": ["Queue", "Array"],
+    "justification": "A queue holds processes in circular order, arrays store burst and arrival times."
+  },
+  "daaStrategy": {
+    "type": "Brute Force",
+    "justification": "Processes are handled in a fixed cyclic order without prioritization or optimization."
+  },
+  "efficiencyAnalysis": {
+    "analysisBasis": "Iterating through all processes repeatedly in time slices",
+    "timeComplexity": {
+      "notation": "O(n * (total burst time / quantum))",
+      "reasoning": "Each process can be executed multiple times depending on burst length and quantum."
+    },
+    "spaceComplexity": {
+      "notation": "O(n)",
+      "reasoning": "Stores process data for n processes."
+    }
+  },
+  "characteristics": [
+    { "feature": "Type", "description": "Preemptive" },
+    { "feature": "Strategy", "description": "Time-slicing with fixed quantum" },
+    { "feature": "Throughput", "description": "Good for time-sharing systems" },
+    { "feature": "Turnaround Time", "description": "Fairly balanced among processes" },
+    { "feature": "Waiting Time", "description": "Lower for interactive processes" }
+  ],
+  "performanceIssues": {
+    "title": "Context Switching Overhead",
+    "description": "Frequent switching between processes can increase overhead and reduce CPU efficiency."
+  },
+  "advantages": [
+    "Fair allocation of CPU time",
+    "Good response time for interactive processes",
+    "Prevents starvation"
+  ],
+  "disadvantages": [
+    "Choosing quantum size is critical",
+    "Too small quantum causes high overhead",
+    "Too large quantum approaches FCFS behavior"
+  ],
+  "faq": [
+    {
+      "question": "How to select time quantum?",
+      "answer": "Typically based on system response requirements; too small increases overhead, too large delays response."
+    },
+    {
+      "question": "Does Round Robin prevent starvation?",
+      "answer": "Yes, every process gets CPU time in cyclic order."
+    },
+    {
+      "question": "Is Round Robin suitable for real-time systems?",
+      "answer": "Not ideal for hard real-time systems due to unpredictable delays."
+    }
+  ],
+  "resources": [
+    {
+      "title": "GeeksforGeeks - Round Robin Scheduling",
+      "url": "https://www.geeksforgeeks.org/round-robin-scheduling-in-operating-system/"
+    },
+    {
+      "title": "YouTube - Round Robin Scheduling Explained",
+      "url": "https://www.youtube.com/watch?v=TxjIlNYRZ5M"
+    }
+  ]
+}
