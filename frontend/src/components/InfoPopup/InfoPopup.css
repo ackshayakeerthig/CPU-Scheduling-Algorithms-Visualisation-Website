@@ -65,7 +65,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #666;
+  color: red;
 }
 
 .close-btn:hover {

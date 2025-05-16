@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./InfoPopup.css";
+import Accordion from "../Accordion/Accordion";
 
 function InfoPopup({ algorithmName }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -122,7 +123,8 @@ function InfoPopup({ algorithmName }) {
                       <strong>Type:</strong> {info.daaStrategy.type}
                     </p>
                     <p>
-                      <strong>Justification:</strong> {info.daaStrategy.justification}
+                      <strong>Justification:</strong>{" "}
+                      {info.daaStrategy.justification}
                     </p>
                   </section>
                 )}
@@ -131,10 +133,12 @@ function InfoPopup({ algorithmName }) {
                   <section>
                     <h3>Data Structures</h3>
                     <p>
-                      <strong>Used:</strong> {info.dataStructures.used.join(", ")}
+                      <strong>Used:</strong>{" "}
+                      {info.dataStructures.used.join(", ")}
                     </p>
                     <p>
-                      <strong>Justification:</strong> {info.dataStructures.justification}
+                      <strong>Justification:</strong>{" "}
+                      {info.dataStructures.justification}
                     </p>
                   </section>
                 )}
@@ -180,15 +184,7 @@ function InfoPopup({ algorithmName }) {
                 {info.faq && (
                   <section>
                     <h3>FAQs</h3>
-                    <ul>
-                      {info.faq.map((item, idx) => (
-                        <li key={idx}>
-                          <strong>Q: {item.question}</strong>
-                          <br />
-                          A: {item.answer}
-                        </li>
-                      ))}
-                    </ul>
+                    <Accordion items={info.faq} />
                   </section>
                 )}
 

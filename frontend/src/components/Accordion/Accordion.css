@@ -1,0 +1,39 @@
+.accordion-item {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+  overflow: hidden;
+}
+
+.accordion-question {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-weight: bold;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-answer {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 1rem;
+  background-color: #f9f9f9;
+  border-left: 3px solid #007bff;
+  transition: all 0.3s ease;
+}
+
+.accordion-answer.open {
+  max-height: 500px; /* Large enough to fit most answers */
+  opacity: 1;
+  padding: 0.5rem 1rem;
+}
+
+.accordion-icon {
+  font-size: 0.9rem;
+}
