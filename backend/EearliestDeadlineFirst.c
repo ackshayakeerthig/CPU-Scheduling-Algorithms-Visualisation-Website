@@ -64,18 +64,19 @@ void *scheduler(void *arg) {
             }
         }
 
-        // Find the highest priority ready task (lowest period, remaining > 0)
+        // Find the task with earliest deadline (EDF logic)
         int selected = -1;
+        int min_deadline = __INT_MAX__;
         for (int i = 0; i < numTasks; i++) {
-            if (tasks[i].remaining > 0) {
+            if (tasks[i].remaining > 0 && tasks[i].deadline < min_deadline) {
                 selected = i;
-                break;
+                min_deadline = tasks[i].deadline;
             }
         }
 
         // Execute the selected task
         if (selected != -1) {
-            printf("Time %2d: Task P%d is running\n", currentTime, tasks[selected].id);
+            printf("Time %2d: Task P%d is running (Deadline: %d)\n", currentTime, tasks[selected].id, tasks[selected].deadline);
             tasks[selected].remaining--;
             if (tasks[selected].remaining == 0) {
                 printf("Time %2d: Task P%d completed\n", currentTime + 1, tasks[selected].id);
