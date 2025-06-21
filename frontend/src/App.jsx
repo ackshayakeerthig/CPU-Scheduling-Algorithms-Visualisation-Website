@@ -37,6 +37,10 @@ function App() {
             path="/RateMonotonic"
             element={<AlgorithmPage algorithmName="RateMonotonic" />}
           />
+          <Route
+            path="/EarliestDeadlineFirst"
+            element={<AlgorithmPage algorithmName="EarliestDeadlineFirst" />}
+          />
         </Routes>
       </BrowserRouter>
     </>

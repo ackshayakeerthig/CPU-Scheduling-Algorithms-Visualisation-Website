@@ -1,0 +1,105 @@
+{
+  "algorithmName": "Earliest Deadline First (EDF) Scheduling",
+  "definition": "EDF is a dynamic-priority scheduling algorithm in which the task closest to its deadline is given the highest priority.",
+  "working": {
+    "description": "At every scheduling point, the scheduler selects the ready task with the earliest absolute deadline. Task priorities are not fixed and change over time based on remaining deadlines. If a task with an earlier deadline becomes ready, it can preempt the currently executing task.",
+    "example": {
+      "processTable": {
+        "headers": ["Process", "Burst Time", "Deadline (ms)"],
+        "rows": [
+          ["P1", "2", "5"],
+          ["P2", "3", "9"],
+          ["P3", "1", "6"]
+        ]
+      },
+      "ganttChartImage": "/images/EDF_gantt_chart.png",
+      "queueDiagramImage": "/images/edf_queue.png"
+    }
+  },
+  "dataStructures": {
+    "used": ["Min-Heap or Priority Queue", "Array"],
+    "justification": "A priority queue based on deadlines ensures quick access to the task with the earliest deadline. Arrays are used to maintain task data and track timing."
+  },
+  "daaStrategy": {
+    "type": "Greedy",
+    "justification": "EDF always picks the task that seems most urgent (closest deadline), optimizing deadline satisfaction greedily at each step."
+  },
+  "efficiencyAnalysis": {
+    "analysisBasis": "Dynamic deadlines and runtime task selection",
+    "timeComplexity": {
+      "notation": "O(n log n)",
+      "reasoning": "Efficient deadline-based selection using a priority queue incurs log(n) cost per operation."
+    },
+    "spaceComplexity": {
+      "notation": "O(n)",
+      "reasoning": "Space is used to store task attributes and ready queue entries."
+    }
+  },
+  "cpuUtilization": {
+    "definition": "EDF maximizes CPU utilization while ensuring all deadlines are met when the system is not overloaded.",
+    "formula": "U = Σ (Cᵢ / Tᵢ), where Cᵢ is the execution time and Tᵢ is the period (for periodic tasks)",
+    "schedulabilityBound": {
+      "description": "Unlike RMS, EDF guarantees schedulability if total CPU utilization does not exceed 100%.",
+      "example": {
+        "n": 3,
+        "bound": "1.0 (100%)",
+        "explanation": "As long as Σ(Cᵢ/Tᵢ) ≤ 1, EDF will schedule all tasks without missing deadlines."
+      },
+      "note": "This makes EDF optimal for uniprocessor scheduling of periodic and aperiodic tasks."
+    },
+    "practicalExample": {
+      "tasks": [
+        { "id": "P1", "burst": 2, "period": 5 },
+        { "id": "P2", "burst": 3, "period": 10 },
+        { "id": "P3", "burst": 1, "period": 6 }
+      ],
+      "utilization": "U = (2/5) + (3/10) + (1/6) ≈ 0.7 + 0.3 + 0.166 ≈ 1.166",
+      "result": "Since 1.166 > 1.0, the task set is not guaranteed to be schedulable under EDF."
+    }
+  },
+  "characteristics": [
+    { "feature": "Type", "description": "Preemptive and Dynamic Priority" },
+    { "feature": "Strategy", "description": "Earliest Deadline gets Highest Priority" },
+    { "feature": "Suitability", "description": "Best for real-time systems with dynamic or aperiodic tasks" },
+    { "feature": "Determinism", "description": "Less predictable due to dynamic priorities" },
+    { "feature": "Deadline Guarantee", "description": "Guaranteed if total utilization ≤ 100%" }
+  ],
+  "performanceIssues": {
+    "title": "Priority Fluctuation Overhead",
+    "description": "Frequent context switches and deadline recalculations can add runtime overhead and make behavior less predictable."
+  },
+  "advantages": [
+    "Optimal for uniprocessor scheduling",
+    "Can fully utilize CPU up to 100%",
+    "Handles both periodic and aperiodic tasks effectively"
+  ],
+  "disadvantages": [
+    "Complex to implement due to dynamic priority",
+    "Higher context switching cost",
+    "Difficult to analyze and test worst-case behavior"
+  ],
+  "faq": [
+    {
+      "question": "How does EDF determine task priority?",
+      "answer": "At any moment, the task with the earliest (closest) deadline gets the highest priority."
+    },
+    {
+      "question": "Is EDF better than RMS?",
+      "answer": "EDF can schedule more task sets and use CPU more efficiently, but RMS is more predictable and simpler for static systems."
+    },
+    {
+      "question": "Can EDF handle aperiodic tasks?",
+      "answer": "Yes, EDF is well-suited for both periodic and aperiodic tasks due to its dynamic deadline handling."
+    }
+  ],
+  "resources": [
+    {
+      "title": "GeeksforGeeks - Earliest Deadline First (EDF)",
+      "url": "https://www.geeksforgeeks.org/operating-systems/earliest-deadline-first-edf-cpu-scheduling-algorithm/"
+    },
+    {
+      "title": "YouTube - EDF Scheduling Explained with Example",
+      "url": "https://www.bing.com/videos/riverview/relatedvideo?q=earliest+deadline+first+youtube&mid=81344D1974E48EC2130F81344D1974E48EC2130F&FORM=VIRE"
+    }
+  ]
+}
