@@ -33,6 +33,10 @@ function App() {
             path="/RoundRobin"
             element={<AlgorithmPage algorithmName="RoundRobin" />}
           />
+          <Route
+            path="/RateMonotonic"
+            element={<AlgorithmPage algorithmName="RateMonotonic" />}
+          />
         </Routes>
       </BrowserRouter>
     </>

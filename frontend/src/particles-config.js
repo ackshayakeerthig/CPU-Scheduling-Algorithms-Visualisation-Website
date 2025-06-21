@@ -1,117 +1,88 @@
 const ParticlesConfig = {
-  "background": {
-    "color": {
-      "value": "#b61924" // Set your desired background color here
+  background: {
+    color: {
+      value: "#fa6f08" // deep warm orange-brown
     }
   },
-  "particles": {
-    "number": {
-      "value": 125,
-      "density": {
-        "enable": true,
-        "value_area": 800
+  particles: {
+    number: {
+      value: 35,
+      density: {
+        enable: true,
+        value_area: 800
       }
     },
-    "color": {
-      "value": "#ffffff"
+    color: {
+      value: ["#ff6f61", "#ffcc00", "#00e6e6", "#ff99cc", "#ffffff"] // vibrant palette
     },
-    "shape": {
-      "type": "circle",
-      "stroke": {
-        "width": 0,
-        "color": "#000000"
-      },
-      "polygon": {
-        "nb_sides": 5
-      },
-      "image": {
-        "src": "img/github.svg",
-        "width": 100,
-        "height": 100
+    shape: {
+      type: "circle",
+      stroke: {
+        width: 0,
+        color: "#000"
       }
     },
-    "opacity": {
-      "value": 0.5,
-      "random": false,
-      "anim": {
-        "enable": false,
-        "speed": 1,
-        "opacity_min": 0.1,
-        "sync": false
+    opacity: {
+      value: 0.6,
+      random: true,
+      anim: {
+        enable: true,
+        speed: 1,
+        opacity_min: 0.3,
+        sync: false
       }
     },
-    "size": {
-      "value": 3,
-      "random": true,
-      "anim": {
-        "enable": false,
-        "speed": 40,
-        "size_min": 0.1,
-        "sync": false
+    size: {
+      value: 20,
+      random: true,
+      anim: {
+        enable: true,
+        speed: 6,
+        size_min: 10,
+        sync: false
       }
     },
-    "line_linked": {
-      "enable": true,
-      "distance": 150,
-      "color": "#ffffff",
-      "opacity": 0.4,
-      "width": 1
+    move: {
+      enable: true,
+      speed: 3,
+      direction: "none", // floats all around
+      random: true,
+      straight: false,
+      out_mode: "out",
+      bounce: false
     },
-    "move": {
-      "enable": true,
-      "speed": 4,
-      "direction": "none",
-      "random": false,
-      "straight": false,
-      "out_mode": "out",
-      "bounce": false,
-      "attract": {
-        "enable": false,
-        "rotateX": 600,
-        "rotateY": 1200
-      }
+    line_linked: {
+      enable: false
     }
   },
-  "interactivity": {
-    "detect_on": "canvas",
-    "events": {
-      "onhover": {
-        "enable": true,
-        "mode": "grab"
+  interactivity: {
+    detect_on: "canvas",
+    events: {
+      onhover: {
+        enable: true,
+        mode: "bubble"
       },
-      "onclick": {
-        "enable": true,
-        "mode": "push"
+      onclick: {
+        enable: true,
+        mode: "repulse"
       },
-      "resize": true
+      resize: true
     },
-    "modes": {
-      "grab": {
-        "distance": 140,
-        "line_linked": {
-          "opacity": 1
-        }
+    modes: {
+      bubble: {
+        distance: 180,
+        size: 40,
+        duration: 2,
+        opacity: 0.8,
+        speed: 2
       },
-      "bubble": {
-        "distance": 400,
-        "size": 40,
-        "duration": 2,
-        "opacity": 8,
-        "speed": 3
-      },
-      "repulse": {
-        "distance": 200,
-        "duration": 0.4
-      },
-      "push": {
-        "particles_nb": 4
-      },
-      "remove": {
-        "particles_nb": 2
+      repulse: {
+        distance: 200,
+        duration: 0.4
       }
     }
   },
-  "retina_detect": true
-}
+  retina_detect: true
+};
 
 export default ParticlesConfig;

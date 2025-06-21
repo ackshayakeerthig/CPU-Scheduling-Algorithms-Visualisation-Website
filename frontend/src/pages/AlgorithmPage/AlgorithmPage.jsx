@@ -8,6 +8,7 @@ import SJF from "../../algorithms/SJF.js";
 import Priority from "../../algorithms/priority.js";
 import FCFS from "../../algorithms/FCFS.js";
 import InfoPopup from "../../components/InfoPopup/InfoPopup.jsx";
+import RateMonotonic from "../../algorithms/RateMonotonic.js";
 
 function selectAlgorithm(algorithmName) {
   const algorithms = {
@@ -16,7 +17,8 @@ function selectAlgorithm(algorithmName) {
     SJF: SJF,
     Priority: Priority,
     FCFS: FCFS,
-    RoundRobin: RR, // Alias for RR
+    RoundRobin: RR,
+    RateMonotonic: RateMonotonic
   };
   return algorithms[algorithmName];
 }

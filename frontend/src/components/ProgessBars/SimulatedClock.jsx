@@ -51,7 +51,7 @@ const SimulatedClock = ({ processes, tickRate = 1000 }) => {
           onClick={handleReplay}
           className="replay-btn"
           style={{
-            backgroundColor: "#3498db",
+            backgroundColor: "#fa6f08",
             color: "white",
             border: "none",
             borderRadius: "5px",

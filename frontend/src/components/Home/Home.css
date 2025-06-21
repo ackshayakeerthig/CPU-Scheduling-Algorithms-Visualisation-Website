@@ -17,34 +17,50 @@
     letter-spacing: 2px;
   }
   
-  .algorithm-btn {
+  /* .algorithm-btn {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     gap: 25px;
     justify-content: center;
+  } */
+  .algorithm-btn {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 2 columns */
+    gap: 25px;
+    justify-items: center; /* center buttons within each cell */
+    align-items: center;
+    padding: 20px;
   }
-  
-  .algorithm-btn button {
-    width: 25vw;
-    background-color: white; 
-    font-weight: bolder;
-    color: black;
-    border: none;
-    border-radius: 5px;
-    padding: 14px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  }
+    .algorithm-btn button {
+  width: 25vw; /* or set a fixed width like 200px */
+  min-height: 60px; /* ensures consistent height */
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+
+  color: black;
+  background-color: white;
+
+  border: 3px solid transparent; /* Invisible border by default */
+  border-radius: 5px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
   
   .algorithm-btn button:hover {
-    background-color: black; 
-    color: white;
-    transform: scale(1.1);
-  }
+  background-color: black;
+  color: white;
+  border: 3px solid white;  /* Add thick white border */
+  transform: scale(1.1);
+  box-sizing: border-box; /* Ensures border doesn't increase button size */
+}
+
   
   .algorithm-btn button:active {
     background-color: #1e598c;
@@ -82,12 +98,6 @@
   @media (max-width: 600px) {
     .title {
       font-size: 2rem;
-    }
-  
-    .algorithm-btn button {
-      padding: 10px 15px; 
-      font-size: 0.8rem;
-      width: 40vw;
     }
   }
   

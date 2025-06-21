@@ -1,43 +1,36 @@
 import React from "react";
 
 const getRandomColor = () => {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+  const orangeShades = ["#FFA500", "#FF8C00", "#FF7F50", "#FF6347"];
+  return orangeShades[Math.floor(Math.random() * orangeShades.length)];
 };
 
 const GanttChart = ({ processes = [] }) => {
   console.log("Processes received by GanttChart:", processes);
 
-  // Define colors for up to 10 processes
+  // Updated to an orange-white theme
   const colors = [
-    "#FF5733",
-    "#33FF57",
-    "#3357FF",
-    "#FFC300",
-    "#DA33FF",
-    "#33FFF5",
-    "#FF33A8",
-    "#A833FF",
-    "#33A8FF",
-    "#FF8C33",
+    "#FFA500", // Orange
+    "#FF8C00", // Dark orange
+    "#FFDAB9", // Light orange / peach
+    "#FFF5E1", // Very light orange
+    "#FFB347", // Soft orange
+    "#FFEFD5", // Papaya whip
+    "#FFCC99", // Peach
+    "#FFE4B5", // Moccasin
+    "#FFF8DC", // Cornsilk
+    "#FAEBD7", // Antique white
   ];
 
-  // Create a color mapping based on process IDs
   const colorMap = {};
   processes.forEach((process) => {
-    const colorIndex = parseInt(process.id.replace("P", ""), 10) - 1; // Convert ID to number
-    if (colorIndex >= 0 && colorIndex < colors.length) {
-      colorMap[process.id] = colors[colorIndex];
-    } else {
-      colorMap[process.id] = getRandomColor(); // Dynamic color if out of bounds
-    }
+    const colorIndex = parseInt(process.id.replace("P", ""), 10) - 1;
+    colorMap[process.id] =
+      colorIndex >= 0 && colorIndex < colors.length
+        ? colors[colorIndex]
+        : getRandomColor();
   });
 
-  // Flatten and map processes to segments with proper color assignment
   const ganttSegments = processes.flatMap((process) =>
     process.ganttValues.map(([start, end]) => ({
       id: process.id,
@@ -47,10 +40,8 @@ const GanttChart = ({ processes = [] }) => {
     }))
   );
 
-  // Sort segments by start time
   ganttSegments.sort((a, b) => a.start - b.start);
 
-  // Determine the overall timeline
   const maxTime =
     ganttSegments.length > 0
       ? Math.max(...ganttSegments.map((segment) => segment.end))
@@ -58,7 +49,7 @@ const GanttChart = ({ processes = [] }) => {
   const timeline = Array.from({ length: maxTime }, (_, i) => i);
 
   return (
-    <div style={{ width: "100%", overflowX: "auto" }}>
+    <div style={{ width: "100%", overflowX: "auto", backgroundColor: "#000" }}>
       <div
         style={{
           display: "flex",
@@ -78,15 +69,15 @@ const GanttChart = ({ processes = [] }) => {
               style={{
                 backgroundColor: activeSegment
                   ? activeSegment.color
-                  : "#E0E0E0", // Idle color
+                  : "#000", // Idle time is black
                 flex: "1 1 auto",
-                minWidth: "30px", // Minimum size for each time slot
+                minWidth: "30px",
                 height: "100px",
-                border: "1px solid #000",
+                border: "1px solid #fff",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                color: "#000",
+                color: activeSegment ? "#000" : "#fff",
                 fontSize: "12px",
               }}
             >
@@ -100,6 +91,7 @@ const GanttChart = ({ processes = [] }) => {
           marginTop: "10px",
           display: "flex",
           width: "100%",
+          color: "#fff",
         }}
       >
         {timeline.map((time) => (
@@ -108,8 +100,8 @@ const GanttChart = ({ processes = [] }) => {
             style={{
               flex: "1 1 auto",
               minWidth: "30px",
-              // textAlign: "center",
               fontSize: "12px",
+              textAlign: "center",
             }}
           >
             {time}

@@ -1,11 +1,29 @@
 import React, { useState } from "react";
 import "./FormTemplate.css";
 
+const getKeyForField = (field) => {
+  switch (field) {
+    case "Process ID":
+      return "id";
+    case "Arrival Time":
+      return "arrival";
+    case "Burst Time":
+      return "burst";
+    case "Priority":
+      return "priority";
+    case "Period":
+      return "period";
+    default:
+      return field.toLowerCase().replace(/\s/g, "");
+  }
+};
+
 const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
   const [processes, setProcesses] = useState([
-    { id: "", arrival: "", burst: "", priority: "" },
+    { id: "", arrival: "", burst: "", priority: "", period: "" },
   ]);
   const [quantum, setQuantum] = useState("");
+  const [simulationTime, setSimulationTime] = useState(100); // default for RateMonotonic
 
   const fieldsByAlgorithm = {
     FCFS: ["Process ID", "Arrival Time", "Burst Time"],
@@ -13,20 +31,22 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
     SRTF: ["Process ID", "Arrival Time", "Burst Time"],
     Priority: ["Process ID", "Arrival Time", "Burst Time", "Priority"],
     RoundRobin: ["Process ID", "Arrival Time", "Burst Time"],
+    RateMonotonic: ["Process ID", "Period", "Burst Time"],
   };
 
   const fields = fieldsByAlgorithm[algorithm] || [];
 
   const handleInputChange = (index, field, value) => {
+    const key = getKeyForField(field);
     const updatedProcesses = [...processes];
-    updatedProcesses[index][field] = value;
+    updatedProcesses[index][key] = value;
     setProcesses(updatedProcesses);
   };
 
   const addProcess = () => {
     setProcesses([
       ...processes,
-      { id: "", arrival: "", burst: "", priority: "" },
+      { id: "", arrival: "", burst: "", priority: "", period: "" },
     ]);
   };
 
@@ -36,8 +56,21 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const isValid = processes.every(
-      (p) => p.id && p.arrival !== "" && p.burst !== ""
+
+    // Define required fields based on internal keys
+    const requiredFields = {
+      FCFS: ["id", "arrival", "burst"],
+      SJF: ["id", "arrival", "burst"],
+      SRTF: ["id", "arrival", "burst"],
+      Priority: ["id", "arrival", "burst", "priority"],
+      RoundRobin: ["id", "arrival", "burst"],
+      RateMonotonic: ["id", "period", "burst"],
+    };
+
+    const fieldsToCheck = requiredFields[algorithm] || [];
+
+    const isValid = processes.every((p) =>
+      fieldsToCheck.every((key) => p[key] !== undefined && p[key] !== "")
     );
 
     if (!isValid) {
@@ -45,24 +78,25 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
       return;
     }
 
-    const dataToSubmit =
-      algorithm === "RoundRobin" ? { processes, quantum } : { processes };
+    let result;
 
-    console.log(dataToSubmit);
+    if (algorithm === "RoundRobin") {
+      result = calculateAlgorithm(processes, quantum);
+    } else if (algorithm === "RateMonotonic") {
+      result = calculateAlgorithm(processes, parseInt(simulationTime, 10));
+    } else {
+      result = calculateAlgorithm(processes);
+    }
 
-    const result =
-      algorithm === "RoundRobin"
-        ? calculateAlgorithm(dataToSubmit.processes, dataToSubmit.quantum)
-        : calculateAlgorithm(dataToSubmit.processes);
-
-    console.log(result);
     setOutput(result);
   };
 
-  // Clear form inputs
   const handleClearForm = () => {
-    setProcesses([{ id: "", arrival: "", burst: "", priority: "" }]);
+    setProcesses([
+      { id: "", arrival: "", burst: "", priority: "", period: "" },
+    ]);
     setQuantum("");
+    setSimulationTime(100);
     setOutput([]);
   };
 
@@ -81,7 +115,9 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
                 placeholder="Process ID"
                 className="template-input"
                 value={process.id}
-                onChange={(e) => handleInputChange(index, "id", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange(index, "Process ID", e.target.value)
+                }
                 required
               />
             )}
@@ -92,9 +128,22 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
                 className="template-input"
                 value={process.arrival}
                 onChange={(e) =>
-                  handleInputChange(index, "arrival", e.target.value)
+                  handleInputChange(index, "Arrival Time", e.target.value)
                 }
                 min="0"
+                required
+              />
+            )}
+            {fields.includes("Period") && (
+              <input
+                type="number"
+                placeholder="Period"
+                className="template-input"
+                value={process.period}
+                onChange={(e) =>
+                  handleInputChange(index, "Period", e.target.value)
+                }
+                min="1"
                 required
               />
             )}
@@ -105,7 +154,7 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
                 className="template-input"
                 value={process.burst}
                 onChange={(e) =>
-                  handleInputChange(index, "burst", e.target.value)
+                  handleInputChange(index, "Burst Time", e.target.value)
                 }
                 min="1"
                 required
@@ -118,7 +167,7 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
                 className="template-input"
                 value={process.priority}
                 onChange={(e) =>
-                  handleInputChange(index, "priority", e.target.value)
+                  handleInputChange(index, "Priority", e.target.value)
                 }
                 min="1"
                 required
@@ -140,9 +189,10 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
             </button>
           </div>
         ))}
+
         {algorithm === "RoundRobin" && (
           <div className="template-quantum">
-            <label htmlFor="quantum">Time Quantum : </label>
+            <label htmlFor="quantum">Time Quantum:</label>
             <input
               type="number"
               id="quantum"
@@ -155,6 +205,23 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
             />
           </div>
         )}
+
+        {algorithm === "RateMonotonic" && (
+          <div className="template-quantum">
+            <label htmlFor="simulationTime">Simulation Time:</label>
+            <input
+              type="number"
+              id="simulationTime"
+              placeholder="Simulation Time"
+              className="template-input"
+              value={simulationTime}
+              onChange={(e) => setSimulationTime(e.target.value)}
+              min="1"
+              required
+            />
+          </div>
+        )}
+
         <div className="template-submit-div-btn">
           <button type="submit" className="template-submit-btn">
             Run

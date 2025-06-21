@@ -3,7 +3,7 @@
     padding: 10px 15px;
     min-width: 80%;
     margin: 4% 5%;
-    background-color: aqua;
+    background-color: rgb(234, 193, 146);
 }
 @media (max-width: 768px) {
     .metric-header{

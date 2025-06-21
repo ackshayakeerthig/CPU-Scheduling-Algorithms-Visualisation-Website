@@ -87,7 +87,46 @@ function InfoPopup({ algorithmName }) {
                     />
                   )}
                 </section>
-
+                {info.cpuUtilization && (
+                  <section>
+                    <h3>CPU Utilization</h3>
+                    <p><strong>Definition:</strong> {info.cpuUtilization.definition}</p>
+                    <p><strong>Formula:</strong> {info.cpuUtilization.formula}</p>
+                
+                    {info.cpuUtilization.schedulabilityBound && (
+                      <>
+                        <h4>Schedulability Bound</h4>
+                        <p>{info.cpuUtilization.schedulabilityBound.description}</p>
+                        {info.cpuUtilization.schedulabilityBound.example && (
+                          <ul>
+                            <li><strong>n:</strong> {info.cpuUtilization.schedulabilityBound.example.n}</li>
+                            <li><strong>Bound:</strong> {info.cpuUtilization.schedulabilityBound.example.bound}</li>
+                            <li>{info.cpuUtilization.schedulabilityBound.example.explanation}</li>
+                          </ul>
+                        )}
+                        {info.cpuUtilization.schedulabilityBound.note && (
+                          <p><em>Note:</em> {info.cpuUtilization.schedulabilityBound.note}</p>
+                        )}
+                      </>
+                    )}
+                
+                    {info.cpuUtilization.practicalExample && (
+                      <>
+                        <h4>Example</h4>
+                        <ul>
+                          {info.cpuUtilization.practicalExample.tasks.map((task, idx) => (
+                            <li key={idx}>
+                              Process {task.id}: Burst = {task.burst}, Period = {task.period}
+                            </li>
+                          ))}
+                        </ul>
+                        <p><strong>Total Utilization:</strong> {info.cpuUtilization.practicalExample.utilization}</p>
+                        <p><strong>Result:</strong> {info.cpuUtilization.practicalExample.result}</p>
+                      </>
+                    )}
+                  </section>
+                )}
+                
                 {info.characteristics && (
                   <section>
                     <h3>Characteristics</h3>

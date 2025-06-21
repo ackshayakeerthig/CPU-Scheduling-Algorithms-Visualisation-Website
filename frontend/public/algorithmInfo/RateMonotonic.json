@@ -1,0 +1,103 @@
+{
+  "algorithmName": "Rate Monotonic Scheduling (RMS)",
+  "definition": "RMS is a fixed-priority scheduling algorithm where tasks with shorter periods are given higher priority.",
+  "working": {
+    "description": "Each periodic task is assigned a static priority based on its period—the shorter the period, the higher the priority. At each scheduling point (typically on task arrival or completion), the scheduler selects the ready task with the highest priority. Preemption occurs if a higher-priority task becomes ready while a lower-priority task is executing.",
+    "example": {
+      "processTable": {
+        "headers": ["Process", "Period (ms)", "Burst Time (ms)"],
+        "rows": [
+          ["P1", "5", "2"],
+          ["P2", "10", "3"]
+        ]
+      },
+      "ganttChartImage": "/images/rate_monotonic_gantt_chart.png",
+      "queueDiagramImage": "/images/rms_queue.png"
+    }
+  },
+  "dataStructures": {
+    "used": ["Priority Queue", "Array"],
+    "justification": "A priority queue can efficiently select the highest priority (lowest period) task at any time. Arrays are used to maintain task attributes and periodic behavior."
+  },
+  "daaStrategy": {
+    "type": "Greedy",
+    "justification": "RMS always chooses the highest priority task at each scheduling decision point to meet as many deadlines as possible."
+  },
+  "efficiencyAnalysis": {
+    "analysisBasis": "Task priorities based on periods",
+    "timeComplexity": {
+      "notation": "O(n log n)",
+      "reasoning": "Selection of highest-priority task can be optimized with a priority queue."
+    },
+    "spaceComplexity": {
+      "notation": "O(n)",
+      "reasoning": "Space is needed to track task periods, burst times, and instances."
+    }
+  },
+  "cpuUtilization": {
+    "definition": "CPU Utilization in RMS refers to the fraction of CPU time effectively used by all scheduled periodic tasks without missing any deadlines.",
+    "formula": "U = Σ (Cᵢ / Tᵢ) for i = 1 to n, where Cᵢ is burst time and Tᵢ is period of task i",
+    "schedulabilityBound": {
+      "description": "To guarantee all deadlines, the total CPU utilization must be less than or equal to n × (2^(1/n) - 1), where n is the number of tasks.",
+      "example": {
+        "n": 2,
+        "bound": "0.8284 (82.84%)",
+        "explanation": "For two tasks, total utilization must not exceed 82.84% for the system to be guaranteed schedulable under RMS."
+      },
+      "note": "As n increases, the bound approaches ln(2) ≈ 0.693 (69.3%)."
+    },
+    "practicalExample": {
+      "tasks": [
+        { "id": "P1", "burst": 2, "period": 5 },
+        { "id": "P2", "burst": 3, "period": 10 }
+      ],
+      "utilization": "U = (2/5) + (3/10) = 0.4 + 0.3 = 0.7",
+      "result": "Since 0.7 < 0.8284, the task set is schedulable under RMS."
+    }
+  },
+  "characteristics": [
+    { "feature": "Type", "description": "Preemptive and Fixed Priority" },
+    { "feature": "Strategy", "description": "Shortest Period gets Highest Priority" },
+    { "feature": "Suitability", "description": "Ideal for hard real-time systems with periodic tasks" },
+    { "feature": "Determinism", "description": "Highly predictable due to fixed priorities" },
+    { "feature": "Deadline Guarantee", "description": "Only guaranteed if CPU utilization is within schedulability bound" }
+  ],
+  "performanceIssues": {
+    "title": "Processor Underutilization",
+    "description": "To guarantee deadlines, RMS requires CPU utilization to be under a specific threshold (e.g., for 2 tasks: 82.84%). If this bound is exceeded, tasks may miss deadlines even if CPU appears idle."
+  },
+  "advantages": [
+    "Predictable and analyzable behavior",
+    "Works well for periodic real-time tasks",
+    "Simple to implement with fixed priorities"
+  ],
+  "disadvantages": [
+    "Not optimal for all task sets",
+    "Tasks with longer periods may miss deadlines even if the CPU is underutilized",
+    "Rigid priority assignment"
+  ],
+  "faq": [
+    {
+      "question": "How is task priority determined in RMS?",
+      "answer": "Tasks are assigned priorities inversely proportional to their periods—shorter period means higher priority."
+    },
+    {
+      "question": "Is RMS optimal?",
+      "answer": "RMS is optimal among fixed-priority algorithms but not optimal overall. Algorithms like EDF (Earliest Deadline First) can schedule more task sets."
+    },
+    {
+      "question": "Can RMS handle aperiodic tasks?",
+      "answer": "RMS is primarily designed for periodic tasks. Handling aperiodic tasks requires additional mechanisms like background servers."
+    }
+  ],
+  "resources": [
+    {
+      "title": "GeeksforGeeks - Rate Monotonic Scheduling",
+      "url": "https://www.geeksforgeeks.org/rate-monotonic-scheduling-rms/"
+    },
+    {
+      "title": "YouTube - Rate Monotonic Scheduling with Example",
+      "url": "https://www.youtube.com/watch?v=V7IjS5LE_Tk"
+    }
+  ]
+}
