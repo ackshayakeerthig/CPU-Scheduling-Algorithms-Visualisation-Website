@@ -1,30 +1,27 @@
-const RateMonotonic = (processes, simulationTime) => {
-  const n = processes.length;
-  let currentTime = 0;
-  let result = [];
+import Heap from "heap-js";
 
-  // Initialize processes with period, burst, and instance tracking
+const RateMonotonic = (processes, simulationTime) => {
+  let currentTime = 0;
+  const result = [];
+
+  // Prepare task structures
   processes = processes.map((p) => ({
     id: p.id,
     period: parseInt(p.period, 10),
     burst: parseInt(p.burst, 10),
     nextRelease: 0,
-    deadline: parseInt(p.period, 10),
-    remaining: 0,
-    instances: [],
-    ganttValues: [],
   }));
 
-  const processInstances = [];
-
+  // MinHeap by period (lower = higher priority)
+  const readyQueue = new Heap((a, b) => a.period - b.period);
   let currentProcess = null;
   let startTime = 0;
 
   while (currentTime < simulationTime) {
-    // Release new instances if it's their period
+    // Release new tasks
     processes.forEach((p) => {
       if (currentTime === p.nextRelease) {
-        processInstances.push({
+        readyQueue.push({
           id: p.id,
           arrival: currentTime,
           deadline: currentTime + p.period,
@@ -37,15 +34,9 @@ const RateMonotonic = (processes, simulationTime) => {
       }
     });
 
-    // Sort by period (rate monotonic priority: lower period = higher priority)
-    processInstances.sort((a, b) => a.period - b.period);
-
-    // Pick the highest priority ready task
-    let nextProcess = processInstances.find(
-      (p) => p.arrival <= currentTime && p.remaining > 0
-    );
-
-    if (nextProcess) {
+    // Get highest priority task (if available)
+    let nextProcess = readyQueue.peek();
+    if (nextProcess && nextProcess.arrival <= currentTime && nextProcess.remaining > 0) {
       if (!currentProcess || currentProcess.id !== nextProcess.id) {
         if (currentProcess) {
           currentProcess.ganttValues.push([startTime, currentTime]);
@@ -62,9 +53,7 @@ const RateMonotonic = (processes, simulationTime) => {
         currentProcess.turnaround = currentProcess.completion - currentProcess.arrival;
         currentProcess.waiting = currentProcess.turnaround - currentProcess.burst;
         result.push({ ...currentProcess });
-        // Remove from instance list
-        const index = processInstances.indexOf(currentProcess);
-        processInstances.splice(index, 1);
+        readyQueue.pop(); // Remove from heap
         currentProcess = null;
       }
     } else {
@@ -76,17 +65,8 @@ const RateMonotonic = (processes, simulationTime) => {
 
     currentTime++;
   }
-   console.log("Rate Monotonic Called With:", processes, simulationTime);
 
   return result;
 };
-export default RateMonotonic
 
-// // Example usage:
-// const processes = [
-//   { id: 'P1', period: 5, burst: 2 },
-//   { id: 'P2', period: 10, burst: 3 },
-// ];
-
-// const result = RateMonotonic(processes, 30);
-// console.log(result);
+export default RateMonotonic;

@@ -1,10 +1,12 @@
+import Heap from 'heap-js';
+
 const Priority = (processes) => {
   const n = processes.length;
   let currentTime = 0;
   let completed = 0;
-  let result = [];
+  const result = [];
 
-  // Step 1: Initialize processes
+  // Initialize processes
   processes = processes.map((p) => ({
     id: p.id,
     arrival: parseInt(p.arrival, 10),
@@ -18,37 +20,35 @@ const Priority = (processes) => {
     ganttValues: [],
   }));
 
-  // Step 2: Sort processes by arrival time
+  // Sort by arrival time
   processes.sort((a, b) => a.arrival - b.arrival);
 
-  let readyQueue = [];
-  let i = 0;
-  let currentIndex = -1;
-  let startTime = 0;
+  let arrivalIndex = 0;
+
+  // Min heap based on priority (lower number = higher priority)
+  const readyQueue = new Heap((a, b) => a.priority - b.priority);
 
   while (completed < n) {
-    // Move all arrived processes into the ready queue
-    while (i < n && processes[i].arrival <= currentTime) {
-      readyQueue.push(processes[i]);
-      i++;
+    // Add all processes that have arrived to the heap
+    while (
+      arrivalIndex < n &&
+      processes[arrivalIndex].arrival <= currentTime
+    ) {
+      readyQueue.push(processes[arrivalIndex]);
+      arrivalIndex++;
     }
 
-    // Sort ready queue by priority (lowest number = highest priority)
-    readyQueue.sort((a, b) => a.priority - b.priority);
-
-    if (readyQueue.length === 0) {
+    if (readyQueue.size() === 0) {
       currentTime++; // CPU is idle
       continue;
     }
 
-    const process = readyQueue.shift(); // Select the highest priority process
-    startTime = currentTime;
+    const process = readyQueue.pop();
+    const startTime = currentTime;
 
     for (let t = 0; t < process.burst; t++) {
       process.remaining--;
       currentTime++;
-
-      // Update completion percentage every unit
       process.completionPercentage.push(
         parseFloat(((t + 1) / process.burst) * 100).toFixed(2)
       );
@@ -56,9 +56,8 @@ const Priority = (processes) => {
 
     process.ganttValues.push([startTime, currentTime]);
     process.completion = currentTime;
-    process.turnaround = process.completion - process.arrival;
+    process.turnaround = currentTime - process.arrival;
     process.waiting = process.turnaround - process.burst;
-    completed++;
 
     result.push({
       id: process.id,
@@ -71,6 +70,8 @@ const Priority = (processes) => {
       completionPercentage: process.completionPercentage,
       ganttValues: process.ganttValues,
     });
+
+    completed++;
   }
 
   return result;

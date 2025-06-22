@@ -1,10 +1,13 @@
+import Heap from 'heap-js';
+
+
 const SJF = (processes) => {
   const n = processes.length;
   let currentTime = 0;
   let completed = 0;
   let result = [];
 
-  // Initialize processes
+  // Preprocess
   processes = processes.map((p) => ({
     id: p.id,
     arrival: parseInt(p.arrival, 10),
@@ -16,47 +19,45 @@ const SJF = (processes) => {
     ganttValues: [],
   }));
 
-  // Sort by arrival time once
   processes.sort((a, b) => a.arrival - b.arrival);
 
-  let readyQueue = [];
+  // Create MinHeap: compare by burst time
+  const heap = new Heap((a, b) => a.burst - b.burst);
+
   let arrivalIndex = 0;
 
   while (completed < n) {
-    // Add newly arrived processes to readyQueue
+    // Add arrived processes to heap
     while (arrivalIndex < n && processes[arrivalIndex].arrival <= currentTime) {
-      readyQueue.push(processes[arrivalIndex]);
+      heap.push(processes[arrivalIndex]);
       arrivalIndex++;
     }
 
-    if (readyQueue.length === 0) {
+    if (heap.size() === 0) {
       currentTime++;
       continue;
     }
 
-    // Select process with shortest burst from readyQueue
-    readyQueue.sort((a, b) => a.burst - b.burst); // stable for same burst time
-    const selectedProcess = readyQueue.shift(); // Remove from queue
+    const selected = heap.pop();
 
-    selectedProcess.ganttValues.push([currentTime, currentTime + selectedProcess.burst]);
+    selected.ganttValues.push([currentTime, currentTime + selected.burst]);
 
-    // Run to completion
-    currentTime += selectedProcess.burst;
-    selectedProcess.remaining = 0;
-    selectedProcess.completion = currentTime;
-    selectedProcess.turnaround = currentTime - selectedProcess.arrival;
-    selectedProcess.waiting = selectedProcess.turnaround - selectedProcess.burst;
+    currentTime += selected.burst;
+    selected.completion = currentTime;
+    selected.turnaround = currentTime - selected.arrival;
+    selected.waiting = selected.turnaround - selected.burst;
+    selected.remaining = 0;
 
     completed++;
 
     result.push({
-      id: selectedProcess.id,
-      arrival: selectedProcess.arrival,
-      burst: selectedProcess.burst,
-      completion: selectedProcess.completion,
-      turnaround: selectedProcess.turnaround,
-      waiting: selectedProcess.waiting,
-      ganttValues: selectedProcess.ganttValues,
+      id: selected.id,
+      arrival: selected.arrival,
+      burst: selected.burst,
+      completion: selected.completion,
+      turnaround: selected.turnaround,
+      waiting: selected.waiting,
+      ganttValues: selected.ganttValues,
     });
   }
 

@@ -2,15 +2,15 @@ const RoundRobin = (processes, quantum) => {
   const n = processes.length;
   let currentTime = 0;
   let completed = 0;
-  let queue = [];
-  let result = [];
+  const queue = []; // behaves like a circular queue with index
+  const result = [];
 
-  // Initialize the processes with their attributes
+  // Initialize processes
   processes = processes.map((p) => ({
     id: p.id,
-    arrival: parseInt(p.arrival, 10),
-    burst: parseInt(p.burst, 10),
-    remaining: parseInt(p.burst, 10),
+    arrival: parseInt(p.arrival),
+    burst: parseInt(p.burst),
+    remaining: parseInt(p.burst),
     completion: 0,
     turnaround: 0,
     waiting: 0,
@@ -18,22 +18,23 @@ const RoundRobin = (processes, quantum) => {
     ganttValues: [],
   }));
 
-  // Sort processes by arrival time
+  // Sort by arrival time
   processes.sort((a, b) => a.arrival - b.arrival);
 
   let currentIndex = -1;
   let startTime = 0;
-  let arrivalIndex = 0; // pointer to track arrivals
-  const queuedProcessIds = new Set(); // to avoid duplicates
+  let arrivalIndex = 0;
+  const queuedProcessIds = new Set();
 
-  // Add processes arriving at time 0
+  // Add processes that arrived at time 0
   while (arrivalIndex < n && processes[arrivalIndex].arrival <= currentTime) {
     queue.push(processes[arrivalIndex]);
     queuedProcessIds.add(processes[arrivalIndex].id);
     arrivalIndex++;
   }
 
-  // While not all processes are completed
+  let queuePointer = 0;
+
   while (completed < n) {
     if (queue.length === 0) {
       currentTime++;
@@ -45,10 +46,11 @@ const RoundRobin = (processes, quantum) => {
       continue;
     }
 
-    const process = queue.shift();
+    const process = queue[queuePointer];
+    queue.splice(queuePointer, 1); // remove from current position
     queuedProcessIds.delete(process.id);
 
-    if (currentIndex === -1 || currentIndex !== process.id) {
+    if (currentIndex !== process.id) {
       if (currentIndex !== -1) {
         const prev = processes.find((p) => p.id === currentIndex);
         prev.ganttValues.push([startTime, currentTime]);
@@ -57,7 +59,7 @@ const RoundRobin = (processes, quantum) => {
       startTime = currentTime;
     }
 
-    const timeSlice = Math.min(process.remaining, quantum);
+    const timeSlice = Math.min(quantum, process.remaining);
     currentTime += timeSlice;
     process.remaining -= timeSlice;
 
@@ -67,12 +69,11 @@ const RoundRobin = (processes, quantum) => {
       ).toFixed(2)
     );
 
-    // Add newly arrived processes
+    // Check for new arrivals during this time slice
     while (arrivalIndex < n && processes[arrivalIndex].arrival <= currentTime) {
-      const arriving = processes[arrivalIndex];
-      if (arriving.remaining > 0 && !queuedProcessIds.has(arriving.id)) {
-        queue.push(arriving);
-        queuedProcessIds.add(arriving.id);
+      if (processes[arrivalIndex].remaining > 0 && !queuedProcessIds.has(processes[arrivalIndex].id)) {
+        queue.push(processes[arrivalIndex]);
+        queuedProcessIds.add(processes[arrivalIndex].id);
       }
       arrivalIndex++;
     }
@@ -83,23 +84,20 @@ const RoundRobin = (processes, quantum) => {
         queuedProcessIds.add(process.id);
       }
     } else {
-      completed++;
       process.completion = currentTime;
       process.turnaround = process.completion - process.arrival;
       process.waiting = process.turnaround - process.burst;
       process.ganttValues.push([startTime, currentTime]);
-
-      result.push({
-        id: process.id,
-        arrival: process.arrival,
-        burst: process.burst,
-        completion: process.completion,
-        turnaround: process.turnaround,
-        waiting: process.waiting,
-        completionPercentage: process.completionPercentage,
-        ganttValues: process.ganttValues,
-      });
+      result.push({ ...process });
+      completed++;
       currentIndex = -1;
+    }
+
+    // Move to next process in circular fashion
+    if (queue.length > 0) {
+      queuePointer = (queuePointer) % queue.length;
+    } else {
+      queuePointer = 0;
     }
   }
 

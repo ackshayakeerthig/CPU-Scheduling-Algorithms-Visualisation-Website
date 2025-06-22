@@ -1,28 +1,26 @@
+import Heap from "heap-js";
+
 const EarliestDeadlineFirst = (processes, simulationTime) => {
   let currentTime = 0;
-  let result = [];
+  const result = [];
 
-  // Initialize processes with deadline and period
+  // Initialize periodic task info
   processes = processes.map((p) => ({
     id: p.id,
     period: parseInt(p.period, 10),
     burst: parseInt(p.burst, 10),
     nextRelease: 0,
-    remaining: 0,
-    instances: [],
-    ganttValues: [],
   }));
 
-  const processInstances = [];
-
+  const readyQueue = new Heap((a, b) => a.deadline - b.deadline); // sort by earliest deadline
   let currentProcess = null;
   let startTime = 0;
 
   while (currentTime < simulationTime) {
-    // Release new instances if period time reached
+    // Release new instances at correct times
     processes.forEach((p) => {
       if (currentTime === p.nextRelease) {
-        processInstances.push({
+        readyQueue.push({
           id: p.id,
           arrival: currentTime,
           deadline: currentTime + p.period,
@@ -35,15 +33,14 @@ const EarliestDeadlineFirst = (processes, simulationTime) => {
       }
     });
 
-    // Sort by earliest deadline (dynamic priority)
-    const readyQueue = processInstances
-      .filter((p) => p.arrival <= currentTime && p.remaining > 0)
-      .sort((a, b) => a.deadline - b.deadline);
+    // Get task with earliest deadline
+    let nextProcess = readyQueue.peek();
+    while (nextProcess && nextProcess.remaining === 0) {
+      readyQueue.pop(); // discard if already finished
+      nextProcess = readyQueue.peek();
+    }
 
-    const nextProcess = readyQueue[0];
-
-    if (nextProcess) {
-      // Preemption check
+    if (nextProcess && nextProcess.arrival <= currentTime) {
       if (!currentProcess || currentProcess.id !== nextProcess.id) {
         if (currentProcess) {
           currentProcess.ganttValues.push([startTime, currentTime]);
@@ -62,13 +59,10 @@ const EarliestDeadlineFirst = (processes, simulationTime) => {
         currentProcess.missedDeadline = currentProcess.completion > currentProcess.deadline;
 
         result.push({ ...currentProcess });
-
-        const index = processInstances.indexOf(currentProcess);
-        processInstances.splice(index, 1);
+        readyQueue.pop(); // remove from heap
         currentProcess = null;
       }
     } else {
-      // Idle time
       if (currentProcess) {
         currentProcess.ganttValues.push([startTime, currentTime]);
         currentProcess = null;
