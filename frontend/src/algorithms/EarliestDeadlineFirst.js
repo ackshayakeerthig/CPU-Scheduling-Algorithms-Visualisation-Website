@@ -36,14 +36,14 @@ const EarliestDeadlineFirst = (processes, simulationTime) => {
     });
 
     // Sort by earliest deadline (dynamic priority)
-    processInstances.sort((a, b) => a.deadline - b.deadline);
+    const readyQueue = processInstances
+      .filter((p) => p.arrival <= currentTime && p.remaining > 0)
+      .sort((a, b) => a.deadline - b.deadline);
 
-    // Pick the task with the earliest deadline
-    let nextProcess = processInstances.find(
-      (p) => p.arrival <= currentTime && p.remaining > 0
-    );
+    const nextProcess = readyQueue[0];
 
     if (nextProcess) {
+      // Preemption check
       if (!currentProcess || currentProcess.id !== nextProcess.id) {
         if (currentProcess) {
           currentProcess.ganttValues.push([startTime, currentTime]);
@@ -57,10 +57,10 @@ const EarliestDeadlineFirst = (processes, simulationTime) => {
       if (currentProcess.remaining === 0) {
         currentProcess.ganttValues.push([startTime, currentTime + 1]);
         currentProcess.completion = currentTime + 1;
-        currentProcess.turnaround =
-          currentProcess.completion - currentProcess.arrival;
-        currentProcess.waiting =
-          currentProcess.turnaround - currentProcess.burst;
+        currentProcess.turnaround = currentProcess.completion - currentProcess.arrival;
+        currentProcess.waiting = currentProcess.turnaround - currentProcess.burst;
+        currentProcess.missedDeadline = currentProcess.completion > currentProcess.deadline;
+
         result.push({ ...currentProcess });
 
         const index = processInstances.indexOf(currentProcess);
@@ -68,31 +68,17 @@ const EarliestDeadlineFirst = (processes, simulationTime) => {
         currentProcess = null;
       }
     } else {
+      // Idle time
       if (currentProcess) {
         currentProcess.ganttValues.push([startTime, currentTime]);
         currentProcess = null;
       }
     }
-    //if (!nextProcess && !currentProcess) {
-  //result.push({
-    //id: 'IDLE',
-    //ganttValues: [[currentTime, currentTime + 1]],
- // });
-//}
 
     currentTime++;
   }
 
-  console.log("Earliest Deadline First Called With:", processes, simulationTime);
   return result;
 };
 
 export default EarliestDeadlineFirst;
-// Example usage:
-//const processes = [
- // { id: 'P1', period: 5, burst: 2 },
- // { id: 'P2', period: 10, burst: 3 },
-//];
-
-//const result = EarliestDeadlineFirst(processes, 30);
-//console.log(result);
