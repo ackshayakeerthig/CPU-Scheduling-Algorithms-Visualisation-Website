@@ -1,4 +1,4 @@
-import MinPriorityQueue from  "js-priority-queue"; // A custom or npm package like 'js-priority-queue'
+import PriorityQueue from "js-priority-queue";
 
 const SRTF = (processes) => {
   const n = processes.length;
@@ -6,6 +6,7 @@ const SRTF = (processes) => {
   let completed = 0;
   let result = [];
 
+  // Initialize processes
   processes = processes.map((p) => ({
     id: p.id,
     arrival: parseInt(p.arrival, 10),
@@ -21,28 +22,29 @@ const SRTF = (processes) => {
   processes.sort((a, b) => a.arrival - b.arrival);
 
   let arrivalIndex = 0;
-  let currentProcess = null;
   let startTime = 0;
-  const heap = new MinPriorityQueue((a, b) => a.remaining - b.remaining);
+  let currentProcess = null;
+
+  const pq = new PriorityQueue({
+    comparator: (a, b) => a.remaining - b.remaining,
+  });
 
   while (completed < n) {
-    // Push newly arrived processes to heap
-    while (
-      arrivalIndex < n &&
-      processes[arrivalIndex].arrival <= currentTime
-    ) {
-      heap.push(processes[arrivalIndex]);
+    // Enqueue all processes that have arrived at current time
+    while (arrivalIndex < n && processes[arrivalIndex].arrival <= currentTime) {
+      pq.queue(processes[arrivalIndex]);
       arrivalIndex++;
     }
 
-    // If no process is ready
-    if (heap.isEmpty()) {
+    if (pq.length === 0) {
       currentTime++;
+      currentProcess = null;
       continue;
     }
 
-    const nextProcess = heap.pop();
+    const nextProcess = pq.dequeue();
 
+    // Context switch
     if (!currentProcess || currentProcess.id !== nextProcess.id) {
       if (currentProcess) {
         currentProcess.ganttValues.push([startTime, currentTime]);
@@ -54,13 +56,12 @@ const SRTF = (processes) => {
     currentProcess.remaining--;
     currentTime++;
 
+    // If finished, finalize stats
     if (currentProcess.remaining === 0) {
       currentProcess.ganttValues.push([startTime, currentTime]);
       currentProcess.completion = currentTime;
-      currentProcess.turnaround =
-        currentProcess.completion - currentProcess.arrival;
-      currentProcess.waiting =
-        currentProcess.turnaround - currentProcess.burst;
+      currentProcess.turnaround = currentProcess.completion - currentProcess.arrival;
+      currentProcess.waiting = currentProcess.turnaround - currentProcess.burst;
 
       result.push({
         id: currentProcess.id,
@@ -76,8 +77,7 @@ const SRTF = (processes) => {
       currentProcess = null;
       completed++;
     } else {
-      // Re-add the process back into the heap
-      heap.push(currentProcess);
+      pq.queue(currentProcess); // Requeue unfinished process
     }
   }
 
