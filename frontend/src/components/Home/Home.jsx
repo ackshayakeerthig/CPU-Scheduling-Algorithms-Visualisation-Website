@@ -27,6 +27,9 @@ const Home = () => {
           <button onClick={() => navigate("/RateMonotonic")}>
             Rate Monotonic Scheduling
           </button>
+          <button onClick={() => navigate("/EarliestDeadlineFirst")}>
+            Earliest Deadline First
+          </button>
         </div>
       </div>
     </>
