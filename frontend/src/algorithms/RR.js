@@ -23,73 +23,72 @@ const RoundRobin = (processes, quantum) => {
 
   let currentIndex = -1;
   let startTime = 0;
+  let arrivalIndex = 0; // pointer to track arrivals
+  const queuedProcessIds = new Set(); // to avoid duplicates
 
-  // Add processes arriving at time 0 to the queue
-  queue.push(...processes.filter((p) => p.arrival <= currentTime));
+  // Add processes arriving at time 0
+  while (arrivalIndex < n && processes[arrivalIndex].arrival <= currentTime) {
+    queue.push(processes[arrivalIndex]);
+    queuedProcessIds.add(processes[arrivalIndex].id);
+    arrivalIndex++;
+  }
 
   // While not all processes are completed
   while (completed < n) {
     if (queue.length === 0) {
-      // If no processes are ready, increment time and add new arrivals
       currentTime++;
-      queue.push(...processes.filter((p) => p.arrival === currentTime));
+      while (arrivalIndex < n && processes[arrivalIndex].arrival <= currentTime) {
+        queue.push(processes[arrivalIndex]);
+        queuedProcessIds.add(processes[arrivalIndex].id);
+        arrivalIndex++;
+      }
       continue;
     }
 
-    // Dequeue the next process
     const process = queue.shift();
+    queuedProcessIds.delete(process.id);
 
-    if (currentIndex === -1 && process) {
+    if (currentIndex === -1 || currentIndex !== process.id) {
+      if (currentIndex !== -1) {
+        const prev = processes.find((p) => p.id === currentIndex);
+        prev.ganttValues.push([startTime, currentTime]);
+      }
       currentIndex = process.id;
       startTime = currentTime;
     }
 
-    if (currentIndex !== -1 && process && currentIndex !== process.id) {
-      processes.find((p) => p.id === currentIndex).ganttValues.push([
-        startTime,
-        currentTime,
-      ]);
-      currentIndex = process.id;
-      startTime = currentTime;
-    }
-
-    // Execute the process for the quantum or until completion
     const timeSlice = Math.min(process.remaining, quantum);
-    process.remaining -= timeSlice;
     currentTime += timeSlice;
+    process.remaining -= timeSlice;
 
-    // Track completion percentage as the process runs
     process.completionPercentage.push(
       parseFloat(
         ((process.burst - process.remaining) / process.burst) * 100
       ).toFixed(2)
     );
 
-    // Add new arrivals to the queue
-    queue.push(
-      ...processes.filter(
-        (p) =>
-          p.arrival > currentTime - timeSlice &&
-          p.arrival <= currentTime &&
-          p.remaining > 0 &&
-          !queue.includes(p)
-      )
-    );
+    // Add newly arrived processes
+    while (arrivalIndex < n && processes[arrivalIndex].arrival <= currentTime) {
+      const arriving = processes[arrivalIndex];
+      if (arriving.remaining > 0 && !queuedProcessIds.has(arriving.id)) {
+        queue.push(arriving);
+        queuedProcessIds.add(arriving.id);
+      }
+      arrivalIndex++;
+    }
 
-    // If the process is not finished, re-add it to the queue
     if (process.remaining > 0) {
-      queue.push(process);
+      if (!queuedProcessIds.has(process.id)) {
+        queue.push(process);
+        queuedProcessIds.add(process.id);
+      }
     } else {
-      // If the process is finished, calculate metrics
       completed++;
       process.completion = currentTime;
       process.turnaround = process.completion - process.arrival;
       process.waiting = process.turnaround - process.burst;
-
-      // Record the Gantt chart value for the completed process
       process.ganttValues.push([startTime, currentTime]);
 
-      // Store completed process results
       result.push({
         id: process.id,
         arrival: process.arrival,
@@ -98,8 +97,9 @@ const RoundRobin = (processes, quantum) => {
         turnaround: process.turnaround,
         waiting: process.waiting,
         completionPercentage: process.completionPercentage,
-        ganttValues: process.ganttValues, // Save the Gantt chart
+        ganttValues: process.ganttValues,
       });
+      currentIndex = -1;
     }
   }
 

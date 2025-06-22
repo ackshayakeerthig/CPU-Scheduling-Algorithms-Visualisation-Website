@@ -4,7 +4,7 @@ const SJF = (processes) => {
   let completed = 0;
   let result = [];
 
-  // Initialize the processes with their arrival, burst, and remaining burst times
+  // Initialize processes
   processes = processes.map((p) => ({
     id: p.id,
     arrival: parseInt(p.arrival, 10),
@@ -13,44 +13,42 @@ const SJF = (processes) => {
     completion: 0,
     turnaround: 0,
     waiting: 0,
-    ganttValues: [], // Stores start and end time pairs for Gantt chart
+    ganttValues: [],
   }));
 
-  // Sort processes by arrival time
+  // Sort by arrival time once
   processes.sort((a, b) => a.arrival - b.arrival);
 
+  let readyQueue = [];
+  let arrivalIndex = 0;
+
   while (completed < n) {
-    // Find all processes that have arrived and are not completed
-    const readyQueue = processes.filter(
-      (p) => p.arrival <= currentTime && p.remaining > 0
-    );
+    // Add newly arrived processes to readyQueue
+    while (arrivalIndex < n && processes[arrivalIndex].arrival <= currentTime) {
+      readyQueue.push(processes[arrivalIndex]);
+      arrivalIndex++;
+    }
 
     if (readyQueue.length === 0) {
-      // If no process is ready, increment time
       currentTime++;
       continue;
     }
 
-    // Select the process with the shortest burst time
-    readyQueue.sort((a, b) => a.remaining - b.remaining);
-    const selectedProcess = readyQueue[0];
+    // Select process with shortest burst from readyQueue
+    readyQueue.sort((a, b) => a.burst - b.burst); // stable for same burst time
+    const selectedProcess = readyQueue.shift(); // Remove from queue
 
-    // Record the Gantt chart value (start and end times)
-    selectedProcess.ganttValues.push([currentTime, currentTime + selectedProcess.remaining]);
+    selectedProcess.ganttValues.push([currentTime, currentTime + selectedProcess.burst]);
 
-    // Execute the selected process
-    currentTime += selectedProcess.remaining;
+    // Run to completion
+    currentTime += selectedProcess.burst;
     selectedProcess.remaining = 0;
     selectedProcess.completion = currentTime;
-
-    // Calculate turnaround time and waiting time
-    selectedProcess.turnaround = selectedProcess.completion - selectedProcess.arrival;
+    selectedProcess.turnaround = currentTime - selectedProcess.arrival;
     selectedProcess.waiting = selectedProcess.turnaround - selectedProcess.burst;
 
-    // Update completed count
     completed++;
 
-    // Store the completed process in the result array
     result.push({
       id: selectedProcess.id,
       arrival: selectedProcess.arrival,
@@ -58,11 +56,8 @@ const SJF = (processes) => {
       completion: selectedProcess.completion,
       turnaround: selectedProcess.turnaround,
       waiting: selectedProcess.waiting,
-      ganttValues: selectedProcess.ganttValues, // Save the Gantt chart
+      ganttValues: selectedProcess.ganttValues,
     });
-
-    // Log process completion (for debugging purposes)
-    console.log(`Process ${selectedProcess.id} completed at time ${currentTime}`);
   }
 
   return result;

@@ -22,47 +22,26 @@ const FCFS = (processes) => {
 
   let currentIndex = -1;
   let startTime = 0;
+  let i = 0; // Pointer to current process in sorted list
 
-  // While not all processes are completed
   while (completed < n) {
-    let processIndex = findNextProcess(processes, n, currentTime);
+    const process = processes[i];
 
-    if (processIndex === -1) {
-      // No process is ready to run, increment the time
-      currentIndex = processIndex;
-      currentTime++;
-      continue;
-    }
-
-    if (currentIndex === -1 && processIndex >= 0) {
-      currentIndex = processIndex;
-      startTime = currentTime;
-    }
-
-    if (currentIndex >= 0 && processIndex >= 0 && currentIndex !== processIndex) {
-      processes[currentIndex].ganttValues.push([startTime, currentTime]);
-      currentIndex = processIndex;
-      startTime = currentTime;
-    }
-
-    // Execute the selected process until completion
-    const process = processes[currentIndex];
     if (currentTime < process.arrival) {
-      currentTime = process.arrival; // If CPU is idle, skip to the process's arrival
+      currentTime = process.arrival; // CPU idle, skip to process arrival
     }
+
+    startTime = currentTime;
     currentTime += process.remaining;
     process.remaining = 0;
     completed++;
 
-    // Record the last Gantt segment for the completed process
     process.ganttValues.push([startTime, currentTime]);
 
-    // Set the completion time and calculate turnaround and waiting times
     process.completion = currentTime;
     process.turnaround = process.completion - process.arrival;
     process.waiting = process.turnaround - process.burst;
 
-    // Store the completed process results
     result.push({
       id: process.id,
       arrival: process.arrival,
@@ -71,22 +50,14 @@ const FCFS = (processes) => {
       turnaround: process.turnaround,
       waiting: process.waiting,
       completionPercentage: process.completionPercentage,
-      ganttValues: process.ganttValues, // Save the Gantt chart
+      ganttValues: process.ganttValues,
     });
+
+    i++; // Move to next process in sorted list
   }
 
   console.log(result);
   return result;
 };
-
-function findNextProcess(processes, n, currentTime) {
-  // Find the first process that has arrived and is not yet completed
-  for (let i = 0; i < n; i++) {
-    if (processes[i].arrival <= currentTime && processes[i].remaining > 0) {
-      return i; // FCFS selects the first arrived process
-    }
-  }
-  return -1; // No process is ready
-}
 
 export default FCFS;
