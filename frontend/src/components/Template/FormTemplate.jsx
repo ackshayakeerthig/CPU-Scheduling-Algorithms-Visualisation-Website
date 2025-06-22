@@ -32,6 +32,7 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
     Priority: ["Process ID", "Arrival Time", "Burst Time", "Priority"],
     RoundRobin: ["Process ID", "Arrival Time", "Burst Time"],
     RateMonotonic: ["Process ID", "Period", "Burst Time"],
+    EarliestDeadlineFirst: ["Process ID", "Period", "Burst Time"]
   };
 
   const fields = fieldsByAlgorithm[algorithm] || [];
@@ -65,6 +66,7 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
       Priority: ["id", "arrival", "burst", "priority"],
       RoundRobin: ["id", "arrival", "burst"],
       RateMonotonic: ["id", "period", "burst"],
+      EarliestDeadlineFirst: ["id", "period", "burst"]
     };
 
     const fieldsToCheck = requiredFields[algorithm] || [];
@@ -82,7 +84,8 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
 
     if (algorithm === "RoundRobin") {
       result = calculateAlgorithm(processes, quantum);
-    } else if (algorithm === "RateMonotonic") {
+    } else if (algorithm === "RateMonotonic"||
+  algorithm === "EarliestDeadlineFirst") {
       result = calculateAlgorithm(processes, parseInt(simulationTime, 10));
     } else {
       result = calculateAlgorithm(processes);
@@ -206,7 +209,7 @@ const FormTemplate = ({ algorithm, setOutput, calculateAlgorithm }) => {
           </div>
         )}
 
-        {algorithm === "RateMonotonic" && (
+        {algorithm === "RateMonotonic"|| algorithm === "EarliestDeadlineFirst" && (
           <div className="template-quantum">
             <label htmlFor="simulationTime">Simulation Time:</label>
             <input

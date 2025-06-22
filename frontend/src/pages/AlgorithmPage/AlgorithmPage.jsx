@@ -9,6 +9,7 @@ import Priority from "../../algorithms/priority.js";
 import FCFS from "../../algorithms/FCFS.js";
 import InfoPopup from "../../components/InfoPopup/InfoPopup.jsx";
 import RateMonotonic from "../../algorithms/RateMonotonic.js";
+import EarliestDeadlineFirst from "../../algorithms/EarliestDeadlineFirst.js";
 
 function selectAlgorithm(algorithmName) {
   const algorithms = {
@@ -18,7 +19,9 @@ function selectAlgorithm(algorithmName) {
     Priority: Priority,
     FCFS: FCFS,
     RoundRobin: RR,
-    RateMonotonic: RateMonotonic
+    RateMonotonic: RateMonotonic,
+    EarliestDeadlineFirst: EarliestDeadlineFirst,
+
   };
   return algorithms[algorithmName];
 }

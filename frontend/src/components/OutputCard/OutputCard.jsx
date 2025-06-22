@@ -30,7 +30,7 @@ function OutputCard({ algorithm, calculateAlgorithm }) {
         <div className="lower-section">
           <div className="output-table-secheduling-metrics">
             <div className="output-table-section">
-              <OutputTable output={output} />
+              <OutputTable output={output} algorithm={algorithm} />
             </div>
             <div className="scheduling-metrics-section">
               <SchedulingMetrics processes={output} />
@@ -46,7 +46,7 @@ function OutputCard({ algorithm, calculateAlgorithm }) {
   );
 }
 
-function OutputTable({ output }) {
+function OutputTable({ output, algorithm }) {
   const tableHeadings = [
     "Process",
     "Arrival",
@@ -54,6 +54,9 @@ function OutputTable({ output }) {
     "Completion",
     "Turnaround",
     "Waiting",
+    ...(algorithm === "EarliestDeadlineFirst"
+      ? ["Missed Deadline"]
+      : [])
   ];
 
   return (
@@ -65,7 +68,7 @@ function OutputTable({ output }) {
       </div>
       <table className="output-table">
         <TableHead headings={tableHeadings} />
-        <TableBody processes={output} />
+        <TableBody processes={output} algorithm={algorithm} />
       </table>
     </>
   );
@@ -75,30 +78,30 @@ function TableHead({ headings }) {
   return (
     <thead>
       <tr>
-        {headings.map((heading) => (
-          <th>{heading}</th>
+        {headings.map((heading, index) => (
+          <th key={index}>{heading}</th>
         ))}
       </tr>
     </thead>
   );
 }
 
-function TableBody({ processes }) {
+function TableBody({ processes, algorithm }) {
   return (
     <tbody>
-      {processes.map((process) => {
-        console.log(process); // Log the process here
-        return (
-          <tr key={process.id}>
-            <td>{process.id}</td>
-            <td>{process.arrival}</td>
-            <td>{process.burst}</td>
-            <td>{process.completion}</td>
-            <td>{process.turnaround}</td>
-            <td>{process.waiting}</td>
-          </tr>
-        );
-      })}
+      {processes.map((process, index) => (
+        <tr key={index}>
+          <td>{process.id}</td>
+          <td>{process.arrival}</td>
+          <td>{process.burst}</td>
+          <td>{process.completion}</td>
+          <td>{process.turnaround}</td>
+          <td>{process.waiting}</td>
+          {(algorithm === "EarliestDeadlineFirst") && (
+            <td>{process.missedDeadline ? "Yes" : "No"}</td>
+          )}
+        </tr>
+      ))}
     </tbody>
   );
 }
