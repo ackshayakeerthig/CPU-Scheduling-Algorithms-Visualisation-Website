@@ -3,6 +3,9 @@ import Home from "./components/Home/Home";
 import ParticleBackground from "./components/ParticleBackground/ParticleBackground";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import AlgorithmPage from "./pages/AlgorithmPage/AlgorithmPage";
+import ComparisonPage from "./pages/ComparisonPage/ComparisonPage";
+
+
 import { Analytics } from "@vercel/analytics/react";
 
 function App() {
@@ -37,6 +40,8 @@ function App() {
             path="/RateMonotonic"
             element={<AlgorithmPage algorithmName="RateMonotonic" />}
           />
+          <Route path="/comparison" element={<ComparisonPage />} />
+
         </Routes>
       </BrowserRouter>
     </>

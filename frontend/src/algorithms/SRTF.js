@@ -1,4 +1,4 @@
-import MinPriorityQueue from  js-priority-queue; // A custom or npm package like 'js-priority-queue'
+import MinPriorityQueue from  "js-priority-queue"; // A custom or npm package like 'js-priority-queue'
 
 const SRTF = (processes) => {
   const n = processes.length;

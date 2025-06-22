@@ -6,7 +6,19 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <>
+    <> 
+    <br/>
+    <br/>
+    <br/>
+    <div className="about-us-wrapper">
+          <button className="about-us-btn">About Us</button>
+          <div className="about-us-dropdown">
+            <ul>
+              <li><strong>Ackshaya Keerthi G</strong> – 1RV23CS013 – ackshayak.cs23@rvce.edu.in</li>
+              <li><strong>Aishwarya V Shetty</strong> – 1RV23CS022 – aishwaryavs.cs23@rvce.edu.in</li>
+            </ul>
+          </div>
+        </div>
       <div className="home-container">
        
         <h1 className="title">CPU Scheduling Visualizer</h1>
@@ -26,6 +38,9 @@ const Home = () => {
           </button>
           <button onClick={() => navigate("/RateMonotonic")}>
             Rate Monotonic Scheduling
+          </button>
+          <button onClick={() => navigate("/Comparison")}>
+           Comparison Between all algorithms
           </button>
         </div>
       </div>
